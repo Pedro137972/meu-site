@@ -1,1 +1,2824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rumo ao Nacional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #171310;
+  --bg-alt: #231d17;
+  --paper: #f1e9d8;
+  --paper-dim: #b9ae96;
+  --card-bg: #efe7d8;
+  --card-input-bg: #dad0ba;
+  --ink: #1c1710;
+  --ink-soft: #6b6252;
+  --yellow: #f4b400;
+  --red: #c1272d;
+  --win: #5c8a52;
+  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--paper);
+  font-family: var(--font-body);
+  min-height: 100%;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 22px 16px 60px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.header h1 {
+  font-family: var(--font-display);
+  color: var(--yellow);
+  font-size: 2.6rem;
+  line-height: 1;
+  margin: 0;
+  letter-spacing: 1px;
+}
+.header p {
+  color: var(--paper-dim);
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+.card {
+  background: var(--card-bg);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card.dark {
+  background: var(--bg-alt);
+  color: var(--paper);
+}
+
+.card h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px;
+}
+
+p.lead {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0 0 10px;
+}
+p.lead:last-child { margin-bottom: 0; }
+
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius);
+  padding: 13px 16px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 10px;
+  background: var(--yellow);
+  color: var(--ink);
+}
+.btn:active { transform: translateY(1px); }
+.btn.secondary {
+  background: transparent;
+  color: var(--paper-dim);
+  border: 1px solid var(--paper-dim);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.btn.danger { background: var(--red); color: var(--paper); }
+.btn.small {
+  width: auto;
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--paper);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 8px;
+}
+.grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.option-card {
+  background: var(--bg);
+  color: var(--paper);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  text-align: left;
+}
+.option-card:hover { border-color: var(--yellow); }
+.option-card .opt-name { font-family: var(--font-display); font-size: 1.1rem; }
+.option-card .opt-val { color: var(--yellow); font-weight: 700; float: right; }
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--card-input-bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  margin-bottom: 8px;
+}
+label.field-label {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  display: block;
+  margin: 4px 0 2px;
+}
+
+.mc-card {
+  background: var(--card-bg);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 2px solid var(--paper-dim);
+}
+.mc-card.you { border-color: var(--yellow); }
+.mc-card.win { border-color: var(--win); }
+.mc-card.lose { border-color: var(--red); }
+.mc-card .mc-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.mc-card .mc-name { font-family: var(--font-display); font-size: 1.4rem; }
+.mc-card .mc-meta { font-size: 0.72rem; color: var(--ink-soft); text-align: right; }
+.mc-card .mc-ovr { font-family: var(--font-display); font-size: 1.6rem; color: var(--red); }
+
+.attr-row { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+.attr-row .attr-label { width: 92px; font-size: 0.72rem; color: var(--ink-soft); }
+.attr-row .attr-bar-bg { flex: 1; height: 7px; border-radius: 4px; background: var(--card-input-bg); overflow: hidden; }
+.attr-row .attr-bar-fill { height: 100%; background: var(--ink); }
+.attr-row .attr-num { width: 24px; text-align: right; font-size: 0.72rem; font-weight: 700; }
+
+.versus {
+  text-align: center;
+  font-family: var(--font-display);
+  color: var(--red);
+  font-size: 1.3rem;
+  margin: 4px 0;
+}
+
+.stage-label {
+  text-align: center;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--paper-dim);
+  margin-bottom: 10px;
+}
+
+.score-line {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  margin: 6px 0;
+}
+.score-line.win { color: var(--win); }
+.score-line.lose { color: var(--red); }
+
+.round-pips { display: flex; justify-content: center; gap: 6px; margin: 6px 0 12px; }
+.round-pips span {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--paper);
+}
+.round-pips span.v { background: var(--win); }
+.round-pips span.d { background: var(--red); }
+
+ul.plain { list-style: none; margin: 0; padding: 0; }
+ul.plain li { font-size: 0.85rem; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+ul.plain li:last-child { border-bottom: none; }
+
+table.stats-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+table.stats-table td { padding: 5px 4px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+table.stats-table td:last-child { text-align: right; font-weight: 700; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--yellow);
+  color: var(--ink);
+  margin-right: 4px;
+}
+
+.slot-card {
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.slot-card:hover { border-color: var(--yellow); }
+.slot-card h3 { font-family: var(--font-display); margin: 0 0 4px; font-size: 1.2rem; color: var(--yellow); }
+.slot-card p { margin: 0; font-size: 0.8rem; color: var(--paper-dim); }
+
+.disclaimer {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--paper-dim);
+  padding-top: 8px;
+  margin-top: 10px;
+}
+
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.tabs button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg-alt);
+  color: var(--paper-dim);
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.tabs button.active { background: var(--yellow); color: var(--ink); }
+
+.year-row { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.year-row b { font-family: var(--font-display); font-size: 1rem; letter-spacing: 0.5px; }
+
+.chave-visual { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 14px; }
+.chave-fase { text-align: center; flex: 1; }
+.chave-fase-nome { font-size: 0.6rem; color: var(--paper-dim); text-transform: uppercase; margin-bottom: 4px; }
+.chave-fase.ativa .chave-fase-nome { color: var(--yellow); font-weight: 700; }
+.chave-pontos { display: flex; justify-content: center; gap: 3px; }
+.chave-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; border: 1px solid var(--paper-dim); display: inline-block; }
+.chave-dot.feito { background: var(--yellow); border-color: var(--yellow); }
+.chave-dot.atual { background: var(--red); border-color: var(--red); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// =========================================================
+// RUMO AO NACIONAL — script.js
+// Camada 1: dados históricos (reais, somente leitura)
+// Camada 2: simulação da carreira do jogador
+// =========================================================
+
+const ATTRS = [
+  { key: "flow", label: "Flow" },
+  { key: "punchline", label: "Punchline" },
+  { key: "construcao", label: "Construção" },
+  { key: "diccao", label: "Dicção" },
+  { key: "criatividade", label: "Criatividade" },
+];
+
+const ESTADOS_BR = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+// ---------------------------------------------------------
+// DADOS HISTÓRICOS — lista curada pelo usuário. Os atributos/OVR
+// abaixo foram ajustados à mão (campeões mais altos, vices logo
+// atrás, os demais nomes competitivos mas um degrau abaixo) — não
+// são uma avaliação oficial da habilidade real de ninguém.
+// ---------------------------------------------------------
+
+const HISTORICAL_MCS = [
+  { id: "cesar-es", nome: "Cesar", estado: "ES", anosNacional: [2017], titulosNacionais: 1, estadual2025: false, flow: 95, punchline: 99, construcao: 97, diccao: 95, criatividade: 96, ovr: 96 },
+  { id: "miliano-ms", nome: "Miliano", estado: "MS", anosNacional: [2017,2018,2023,2024], titulosNacionais: 1, estadual2025: false, flow: 90, punchline: 91, construcao: 89, diccao: 90, criatividade: 90, ovr: 90 },
+  { id: "mcharles-ce", nome: "MCharles", estado: "CE", anosNacional: [2018,2019,2023], titulosNacionais: 1, estadual2025: true, flow: 91, punchline: 87, construcao: 88, diccao: 90, criatividade: 89, ovr: 89 },
+  { id: "bigmike-sp", nome: "Big Mike", estado: "SP", anosNacional: [2022], titulosNacionais: 1, estadual2025: false, flow: 94, punchline: 95, construcao: 91, diccao: 93, criatividade: 92, ovr: 93 },
+  { id: "kaemy-go", nome: "Kaemy", estado: "GO", anosNacional: [2020,2022,2023], titulosNacionais: 1, estadual2025: true, flow: 90, punchline: 91, construcao: 90, diccao: 89, criatividade: 90, ovr: 90 },
+  { id: "martzin-mg", nome: "Martzin", estado: "MG", anosNacional: [2023,2024], titulosNacionais: 1, estadual2025: false, flow: 93, punchline: 92, construcao: 95, diccao: 91, criatividade: 90, ovr: 92 },
+  { id: "barreto-sp", nome: "Barreto", estado: "SP", anosNacional: [2025], titulosNacionais: 0, estadual2025: false, flow: 93, punchline: 96, construcao: 92, diccao: 95, criatividade: 94, ovr: 94 },
+  { id: "youngui-sp", nome: "Youngui", estado: "SP", anosNacional: [2022], titulosNacionais: 0, estadual2025: false, flow: 90, punchline: 88, construcao: 86, diccao: 87, criatividade: 89, ovr: 88 },
+  { id: "noventa-es", nome: "Noventa", estado: "ES", anosNacional: [2019,2024], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 91, construcao: 87, diccao: 89, criatividade: 90, ovr: 89 },
+  { id: "ng-mg", nome: "NG", estado: "MG", anosNacional: [2018], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 90, construcao: 91, diccao: 87, criatividade: 88, ovr: 89 },
+  { id: "drizzy-mg", nome: "Drizzy", estado: "MG", anosNacional: [2017], titulosNacionais: 0, estadual2025: false, flow: 90, punchline: 92, construcao: 88, diccao: 89, criatividade: 91, ovr: 90 },
+  { id: "apollo-sp", nome: "Apollo", estado: "SP", anosNacional: [2024], titulosNacionais: 0, estadual2025: false, flow: 92, punchline: 94, construcao: 91, diccao: 95, criatividade: 93, ovr: 93 },
+  { id: "jotape-sp", nome: "Jotapê", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 93, punchline: 95, construcao: 92, diccao: 96, criatividade: 94, ovr: 94 },
+
+  { id: "21-ac", nome: "21", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 86, diccao: 85, criatividade: 82, ovr: 84 },
+  { id: "menezes-ac", nome: "Menezes", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 79, diccao: 80, criatividade: 81, ovr: 81 },
+  { id: "thug-dog-ac", nome: "Thug Dog", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 85, construcao: 82, diccao: 83, criatividade: 81, ovr: 83 },
+  { id: "wm-ac", nome: "WM", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 79, construcao: 82, diccao: 80, criatividade: 81, ovr: 80 },
+  { id: "el-tchuco-ac", nome: "El Tchuco", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 85, construcao: 87, diccao: 86, criatividade: 88, ovr: 87 },
+  { id: "mano-z-ac", nome: "Mano Z", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 86, diccao: 82, criatividade: 85, ovr: 84 },
+  { id: "vieira-ac", nome: "Vieira", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 84, construcao: 83, diccao: 80, criatividade: 82, ovr: 82 },
+  { id: "ninja-ac", nome: "Ninja", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 83, diccao: 84, criatividade: 82, ovr: 84 },
+  { id: "russo-ac", nome: "Russo", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 87, diccao: 84, criatividade: 88, ovr: 86 },
+  { id: "dreshao-ac", nome: "Dreshao", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 83, diccao: 84, criatividade: 82, ovr: 84 },
+  { id: "jamaica-ac", nome: "Jamaica", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 82, diccao: 81, criatividade: 85, ovr: 83 },
+  { id: "uede-ac", nome: "Uede", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 85, construcao: 86, diccao: 84, criatividade: 87, ovr: 85 },
+  { id: "railson-ac", nome: "Railson", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 82, construcao: 84, diccao: 86, criatividade: 83, ovr: 84 },
+  { id: "dablueme-ac", nome: "Dablueme", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 86, construcao: 85, diccao: 87, criatividade: 88, ovr: 86 },
+  { id: "aleatório-ac", nome: "Aleatório", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 80, diccao: 82, criatividade: 84, ovr: 82 },
+  { id: "kaos-ac", nome: "Kaos", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 80, construcao: 83, diccao: 79, criatividade: 81, ovr: 81 },
+  { id: "colombiano-ac", nome: "Colombiano", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 84, construcao: 85, diccao: 83, criatividade: 86, ovr: 84 },
+  { id: "morgana-ac", nome: "Morgana", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 80, construcao: 81, diccao: 77, criatividade: 78, ovr: 79 },
+  { id: "órion-ac", nome: "Órion", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 86, construcao: 83, diccao: 84, criatividade: 85, ovr: 85 },
+  { id: "apaxi-ac", nome: "Apaxi", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 90, punchline: 86, construcao: 88, diccao: 89, criatividade: 87, ovr: 88 },
+  { id: "dudu-ac", nome: "Dudu", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 82, construcao: 78, diccao: 80, criatividade: 79, ovr: 80 },
+  { id: "ph-ac", nome: "PH", estado: "AC", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 79, construcao: 78, diccao: 81, criatividade: 80, ovr: 79 },
+
+  { id: "onze-al", nome: "Onze", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 85, construcao: 88, diccao: 86, criatividade: 87, ovr: 87 },
+  { id: "kire-al", nome: "Kire", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 87, construcao: 88, diccao: 90, criatividade: 89, ovr: 88 },
+  { id: "kenshin-al", nome: "Kenshin", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 81, diccao: 82, criatividade: 84, ovr: 83 },
+  { id: "skinny-al", nome: "Skinny", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 81, diccao: 83, criatividade: 80, ovr: 82 },
+  { id: "klebin-al", nome: "Klebin", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 82, construcao: 81, diccao: 80, criatividade: 78, ovr: 80 },
+  { id: "mago-akira-al", nome: "Mago Akira", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 85, construcao: 86, diccao: 84, criatividade: 87, ovr: 85 },
+  { id: "alice-gorete-al", nome: "Alice Gorete", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 84, construcao: 85, diccao: 87, criatividade: 86, ovr: 86 },
+  { id: "chato-al", nome: "Chato", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 85, construcao: 82, diccao: 83, criatividade: 84, ovr: 83 },
+  { id: "gabriel-lost-al", nome: "Gabriel Lost", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 85, construcao: 86, diccao: 83, criatividade: 84, ovr: 84 },
+  { id: "gordão-da-rima-al", nome: "Gordão da Rima", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 81, diccao: 84, criatividade: 85, ovr: 83 },
+  { id: "joãozinho-al", nome: "Joãozinho", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 81, diccao: 85, criatividade: 82, ovr: 83 },
+  { id: "luka-al", nome: "Luka", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 80, construcao: 81, diccao: 82, criatividade: 84, ovr: 82 },
+  { id: "mabru-al", nome: "Mabru", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 84, diccao: 81, criatividade: 85, ovr: 83 },
+  { id: "marcos-al", nome: "Marcos", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 82, diccao: 80, criatividade: 84, ovr: 82 },
+  { id: "menni-al", nome: "Menni", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 82, diccao: 85, criatividade: 81, ovr: 83 },
+  { id: "wel-al", nome: "Wel", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 83, diccao: 81, criatividade: 80, ovr: 82 },
+  { id: "will-tattoo-al", nome: "Will Tattoo", estado: "AL", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 86, diccao: 82, criatividade: 84, ovr: 84 },
+
+  { id: "hellbala-se", nome: "HellBala", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 89, construcao: 90, diccao: 88, criatividade: 91, ovr: 89 },
+  { id: "manh-se", nome: "Manh", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 84, construcao: 83, diccao: 82, criatividade: 80, ovr: 82 },
+  { id: "jbthoven-se", nome: "JBThoven", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 87, construcao: 88, diccao: 86, criatividade: 90, ovr: 88 },
+  { id: "lave-se", nome: "Lave", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 80, construcao: 82, diccao: 84, criatividade: 81, ovr: 82 },
+  { id: "anabê-se", nome: "Anabê", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 78, construcao: 77, diccao: 81, criatividade: 79, ovr: 79 },
+  { id: "shang-se", nome: "Shang", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 88, construcao: 87, diccao: 85, criatividade: 86, ovr: 87 },
+  { id: "pedrin-da-sr-se", nome: "Pedrin da SR", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 84, construcao: 80, diccao: 82, criatividade: 81, ovr: 82 },
+  { id: "concreto-se", nome: "Concreto", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 79, construcao: 80, diccao: 81, criatividade: 78, ovr: 80 },
+  { id: "brayan-mc-se", nome: "Brayan Mc", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 81, diccao: 82, criatividade: 84, ovr: 83 },
+  { id: "ursobt-se", nome: "Ursobt", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 82, construcao: 83, diccao: 84, criatividade: 85, ovr: 83 },
+  { id: "rick-se", nome: "Rick", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 83, construcao: 82, diccao: 84, criatividade: 85, ovr: 83 },
+  { id: "mano-magrox-se", nome: "Mano Magrox", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 79, construcao: 82, diccao: 78, criatividade: 81, ovr: 80 },
+  { id: "fubá-se", nome: "Fubá", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 82, construcao: 81, diccao: 80, criatividade: 79, ovr: 80 },
+  { id: "dre-se", nome: "Dre", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 78, construcao: 81, diccao: 80, criatividade: 77, ovr: 79 },
+  { id: "kayan-se", nome: "Kayan", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 84, construcao: 83, diccao: 82, criatividade: 86, ovr: 84 },
+  { id: "bambata-se", nome: "Bambata", estado: "SE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 81, construcao: 78, diccao: 79, criatividade: 80, ovr: 79 },
+
+  { id: "ivo-ap", nome: "Ivo", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 85, construcao: 88, diccao: 86, criatividade: 87, ovr: 87 },
+  { id: "ayala-ap", nome: "Ayala", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 80, construcao: 77, diccao: 78, criatividade: 81, ovr: 79 },
+  { id: "cn-ap", nome: "CN", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 80, construcao: 76, diccao: 78, criatividade: 77, ovr: 78 },
+  { id: "pedrão-pesadão-ap", nome: "Pedrão Pesadão", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 77, construcao: 76, diccao: 75, criatividade: 78, ovr: 77 },
+  { id: "barroso-ap", nome: "Barroso", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 78, construcao: 79, diccao: 77, criatividade: 80, ovr: 79 },
+  { id: "tk-da-10-ap", nome: "TK da 10", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 79, construcao: 80, diccao: 82, criatividade: 81, ovr: 80 },
+  { id: "m-o-ap", nome: "M.O", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 84, construcao: 81, diccao: 82, criatividade: 85, ovr: 83 },
+  { id: "pedro-cm-ap", nome: "Pedro CM", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 84, construcao: 85, diccao: 83, criatividade: 86, ovr: 84 },
+  { id: "gênio-ap", nome: "Gênio", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 75, construcao: 76, diccao: 79, criatividade: 77, ovr: 77 },
+  { id: "shot-ap", nome: "Shot", estado: "AP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 81, construcao: 78, diccao: 79, criatividade: 82, ovr: 80 },
+
+  { id: "vitu-pe", nome: "Vitu", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 90, construcao: 87, diccao: 88, criatividade: 91, ovr: 89 },
+  { id: "hogue-pe", nome: "Hogue", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 85, construcao: 84, diccao: 83, criatividade: 86, ovr: 84 },
+  { id: "jason-pe", nome: "Jason", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 85, construcao: 86, diccao: 88, criatividade: 84, ovr: 86 },
+  { id: "acuca-pe", nome: "Acuca", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 89, diccao: 87, criatividade: 88, ovr: 87 },
+  { id: "alemão-pe", nome: "Alemão", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 82, diccao: 80, criatividade: 84, ovr: 82 },
+  { id: "dith-pe", nome: "Dith", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 78, construcao: 79, diccao: 80, criatividade: 82, ovr: 80 },
+  { id: "hz-pe", nome: "HZ", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 81, construcao: 84, diccao: 83, criatividade: 82, ovr: 82 },
+  { id: "koda-pe", nome: "Koda", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 77, construcao: 78, diccao: 79, criatividade: 81, ovr: 79 },
+  { id: "nandinho-pe", nome: "Nandinho", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 82, diccao: 84, criatividade: 83, ovr: 84 },
+  { id: "neto-pe", nome: "Neto", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 76, construcao: 75, diccao: 78, criatividade: 77, ovr: 77 },
+  { id: "ninja-pe", nome: "Ninja", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 76, construcao: 75, diccao: 74, criatividade: 77, ovr: 76 },
+  { id: "n-i-x-pe", nome: "N.I.X", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 78, construcao: 79, diccao: 77, criatividade: 81, ovr: 79 },
+  { id: "otzi-pe", nome: "Otzi", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 80, diccao: 81, criatividade: 82, ovr: 82 },
+  { id: "r-prince-pe", nome: "R Prince", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 80, construcao: 82, diccao: 84, criatividade: 81, ovr: 82 },
+  { id: "tedy-pe", nome: "Tedy", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 78, construcao: 80, diccao: 81, criatividade: 79, ovr: 80 },
+  { id: "ton-pe", nome: "Ton", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 79, construcao: 78, diccao: 81, criatividade: 80, ovr: 79 },
+  { id: "gênio-pe", nome: "Gênio", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 76, construcao: 75, diccao: 77, criatividade: 79, ovr: 77 },
+  { id: "tai-pe", nome: "Tai", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 79, construcao: 80, diccao: 77, criatividade: 76, ovr: 78 },
+  { id: "salsi-pe", nome: "Salsi", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 78, construcao: 75, diccao: 76, criatividade: 77, ovr: 77 },
+  { id: "mano-sid-pe", nome: "Mano Sid", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 79, construcao: 81, diccao: 78, criatividade: 82, ovr: 80 },
+  { id: "vinicius-zn-pe", nome: "Vinicius ZN", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 87, construcao: 90, diccao: 89, criatividade: 86, ovr: 88 },
+  { id: "hb-pe", nome: "HB", estado: "PE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 82, construcao: 81, diccao: 83, criatividade: 84, ovr: 82 },
+
+  { id: "rank-pb", nome: "Rank", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 84, diccao: 83, criatividade: 87, ovr: 85 },
+  { id: "stash-pb", nome: "Stash", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 85, construcao: 86, diccao: 83, criatividade: 84, ovr: 84 },
+  { id: "clow-pb", nome: "Clow", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 80, construcao: 82, diccao: 81, criatividade: 83, ovr: 82 },
+  { id: "akuma-pb", nome: "Akuma", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 82, construcao: 83, diccao: 84, criatividade: 81, ovr: 83 },
+  { id: "druh-pb", nome: "Druh", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 80, construcao: 82, diccao: 81, criatividade: 83, ovr: 82 },
+  { id: "nativo-pb", nome: "Nativo", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 78, construcao: 79, diccao: 76, criatividade: 75, ovr: 77 },
+  { id: "broken-pb", nome: "Broken", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 79, construcao: 76, diccao: 77, criatividade: 78, ovr: 78 },
+  { id: "isadroga-pb", nome: "Isadroga", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 75, punchline: 73, construcao: 76, diccao: 77, criatividade: 74, ovr: 75 },
+  { id: "jeff-pb", nome: "Jeff", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 72, punchline: 74, construcao: 73, diccao: 75, criatividade: 76, ovr: 74 },
+  { id: "kalmon-pb", nome: "Kalmon", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 74, punchline: 77, construcao: 76, diccao: 73, criatividade: 75, ovr: 75 },
+  { id: "mizera-pb", nome: "Mizera", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 76, punchline: 79, construcao: 78, diccao: 77, criatividade: 75, ovr: 77 },
+  { id: "nillo-pb", nome: "Nillo", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 79, construcao: 78, diccao: 77, criatividade: 81, ovr: 79 },
+  { id: "robsom-pb", nome: "Robsom", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 80, construcao: 78, diccao: 82, criatividade: 79, ovr: 80 },
+  { id: "rod-pb", nome: "Rod", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 80, construcao: 79, diccao: 82, criatividade: 81, ovr: 81 },
+  { id: "rodrigo-cz-pb", nome: "Rodrigo CZ", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 82, construcao: 81, diccao: 80, criatividade: 83, ovr: 81 },
+  { id: "spawn-pb", nome: "Spawn", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 79, construcao: 78, diccao: 77, criatividade: 80, ovr: 79 },
+  { id: "tatsuo-pb", nome: "Tatsuo", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 81, construcao: 78, diccao: 77, criatividade: 79, ovr: 79 },
+  { id: "vulto-pb", nome: "Vulto", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 80, construcao: 79, diccao: 82, criatividade: 81, ovr: 80 },
+
+  { id: "frizzy-rn", nome: "Frizzy", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 86, construcao: 89, diccao: 87, criatividade: 85, ovr: 87 },
+  { id: "nick-rn", nome: "Nick", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 84, construcao: 85, diccao: 83, criatividade: 86, ovr: 84 },
+  { id: "mexicano-rn", nome: "Mexicano", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 81, diccao: 83, criatividade: 85, ovr: 83 },
+  { id: "torris-rn", nome: "Torris", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 83, construcao: 82, diccao: 84, criatividade: 85, ovr: 83 },
+  { id: "nanduzz-rn", nome: "Nanduzz", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 86, construcao: 85, diccao: 84, criatividade: 83, ovr: 84 },
+  { id: "bruninho-da-rima-rn", nome: "Bruninho da Rima", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 82, diccao: 80, criatividade: 81, ovr: 82 },
+  { id: "blackout-rn", nome: "Blackout", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 80, construcao: 81, diccao: 79, criatividade: 78, ovr: 80 },
+  { id: "duduzzin-rn", nome: "Duduzzin", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 80, construcao: 79, diccao: 78, criatividade: 81, ovr: 79 },
+  { id: "kaiser-rn", nome: "Kaiser", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 82, construcao: 83, diccao: 84, criatividade: 85, ovr: 83 },
+  { id: "pablisson-rn", nome: "Pablisson", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 79, construcao: 82, diccao: 81, criatividade: 80, ovr: 80 },
+  { id: "sam-rn", nome: "Sam", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 79, construcao: 80, diccao: 77, criatividade: 76, ovr: 78 },
+  { id: "doctor-rn", nome: "Doctor", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 79, punchline: 77, construcao: 81, diccao: 78, criatividade: 80, ovr: 79 },
+  { id: "shinu-rn", nome: "Shinu", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 80, construcao: 77, diccao: 78, criatividade: 79, ovr: 79 },
+  { id: "hunter-rn", nome: "Hunter", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 79, construcao: 82, diccao: 78, criatividade: 80, ovr: 80 },
+  { id: "gilvan-rn", nome: "Gilvan", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 79, construcao: 81, diccao: 82, criatividade: 80, ovr: 81 },
+  { id: "apns-del-rn", nome: "Apns Del", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 82, construcao: 83, diccao: 81, criatividade: 84, ovr: 82 },
+  { id: "marte-rn", nome: "Marte", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 81, construcao: 82, diccao: 79, criatividade: 80, ovr: 80 },
+
+  { id: "snart-ce", nome: "Snart", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 83, construcao: 84, diccao: 87, criatividade: 85, ovr: 85 },
+  { id: "clauber-ce", nome: "Clauber", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 84, construcao: 83, diccao: 82, criatividade: 81, ovr: 82 },
+  { id: "martin-ce", nome: "Martin", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 83, construcao: 84, diccao: 85, criatividade: 82, ovr: 84 },
+  { id: "star-ce", nome: "Star", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 78, construcao: 75, diccao: 74, criatividade: 76, ovr: 76 },
+  { id: "xp-ce", nome: "XP", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 75, construcao: 77, diccao: 79, criatividade: 76, ovr: 77 },
+  { id: "twoel-ce", nome: "Twoel", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 76, construcao: 77, diccao: 79, criatividade: 78, ovr: 78 },
+  { id: "iviz-ce", nome: "Iviz", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 75, construcao: 76, diccao: 77, criatividade: 79, ovr: 77 },
+  { id: "caveira-ce", nome: "Caveira", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 79, construcao: 77, diccao: 80, criatividade: 78, ovr: 79 },
+  { id: "lan-ce", nome: "Lan", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 80, construcao: 79, diccao: 78, criatividade: 81, ovr: 79 },
+  { id: "nogtz-ce", nome: "Nogtz", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 77, punchline: 78, construcao: 80, diccao: 81, criatividade: 79, ovr: 79 },
+  { id: "kn-ce", nome: "KN", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 79, diccao: 82, criatividade: 80, ovr: 81 },
+  { id: "sequência-ce", nome: "Sequência", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 83, construcao: 84, diccao: 81, criatividade: 82, ovr: 82 },
+  { id: "barnabé-ce", nome: "Barnabé", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 81, construcao: 82, diccao: 78, criatividade: 79, ovr: 80 },
+  { id: "mt-ce", nome: "MT", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 77, construcao: 76, diccao: 79, criatividade: 80, ovr: 78 },
+  { id: "dantaz-ce", nome: "Dantaz", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 84, diccao: 85, criatividade: 82, ovr: 83 },
+  { id: "mandacaru-ce", nome: "Mandacaru", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 84, construcao: 87, diccao: 88, criatividade: 85, ovr: 86 },
+  { id: "davcena-ce", nome: "Davcena", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 82, diccao: 84, criatividade: 83, ovr: 84 },
+  { id: "exodia-ce", nome: "Exodia", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 81, diccao: 80, criatividade: 84, ovr: 82 },
+  { id: "yuri-ce", nome: "Yuri", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 77, construcao: 79, diccao: 80, criatividade: 78, ovr: 79 },
+  { id: "leviano-ce", nome: "Leviano", estado: "CE", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 81, construcao: 77, diccao: 79, criatividade: 80, ovr: 79 },
+
+  { id: "japa-ba", nome: "Japa", estado: "BA", anosNacional: [2020,2022,2023,2024,2025], titulosNacionais: 1, estadual2025: false, flow: 95, punchline: 92, construcao: 93, diccao: 94, criatividade: 91, ovr: 93 },
+  { id: "bert-ba", nome: "Bert", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 84, diccao: 86, criatividade: 82, ovr: 84 },
+  { id: "chagas-ba", nome: "Chagas", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 84, construcao: 83, diccao: 82, criatividade: 86, ovr: 84 },
+  { id: "willy-ba", nome: "Willy", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 85, construcao: 82, diccao: 83, criatividade: 84, ovr: 83 },
+  { id: "mirapotira-ba", nome: "Mirapotira", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 84, diccao: 82, criatividade: 83, ovr: 84 },
+  { id: "big-ba", nome: "Big", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 81, construcao: 80, diccao: 83, criatividade: 84, ovr: 82 },
+  { id: "larício-ba", nome: "Larício", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 91, punchline: 89, construcao: 90, diccao: 92, criatividade: 88, ovr: 90 },
+  { id: "treck-ba", nome: "Treck", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 85, diccao: 84, criatividade: 86, ovr: 84 },
+  { id: "black-ba", nome: "Black", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 90, punchline: 91, construcao: 88, diccao: 87, criatividade: 89, ovr: 89 },
+  { id: "yoga-ba", nome: "Yoga", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 89, construcao: 92, diccao: 91, criatividade: 90, ovr: 90 },
+  { id: "pitbull-ba", nome: "Pitbull", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 88, construcao: 87, diccao: 85, criatividade: 86, ovr: 87 },
+  { id: "jaz-ba", nome: "Jaz", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 90, construcao: 87, diccao: 88, criatividade: 89, ovr: 88 },
+  { id: "adri-ba", nome: "Adri", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 84, construcao: 83, diccao: 82, criatividade: 85, ovr: 83 },
+  { id: "nad-ba", nome: "Nad", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 85, diccao: 82, criatividade: 86, ovr: 84 },
+  { id: "negrão-csi-ba", nome: "Negrão CSI", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 83, construcao: 84, diccao: 85, criatividade: 87, ovr: 85 },
+  { id: "smitt-ba", nome: "Smitt", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 80, diccao: 82, criatividade: 84, ovr: 82 },
+  { id: "astro-ba", nome: "Astro", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 87, construcao: 84, diccao: 83, criatividade: 85, ovr: 85 },
+  { id: "reyel-ba", nome: "Reyel", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 80, construcao: 82, diccao: 84, criatividade: 81, ovr: 82 },
+  { id: "matyaws-ba", nome: "Matyaws", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 81, construcao: 83, diccao: 84, criatividade: 82, ovr: 83 },
+  { id: "edy-ba", nome: "Edy", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 78, construcao: 80, diccao: 79, criatividade: 81, ovr: 80 },
+  { id: "crazy-ba", nome: "Crazy", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 80, punchline: 78, construcao: 81, diccao: 82, criatividade: 79, ovr: 80 },
+  { id: "manel-ba", nome: "Manel", estado: "BA", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 80, construcao: 79, diccao: 82, criatividade: 78, ovr: 80 },
+
+  { id: "alezzin-rn", nome: "Alezzin", estado: "RN", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 85, construcao: 86, diccao: 83, criatividade: 82, ovr: 84 },
+  { id: "igorz-pb", nome: "IgorZ", estado: "PB", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 85, construcao: 86, diccao: 83, criatividade: 84, ovr: 85 },
+
+  { id: "tubarão-sp", nome: "Tubarão", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 90, punchline: 86, construcao: 87, diccao: 89, criatividade: 88, ovr: 88 },
+  { id: "prado-sp", nome: "Prado", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 92, punchline: 88, construcao: 90, diccao: 91, criatividade: 89, ovr: 90 },
+  { id: "tavin-sp", nome: "Tavin", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 86, construcao: 89, diccao: 85, criatividade: 88, ovr: 87 },
+  { id: "wm-sp", nome: "Wm", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 88, diccao: 87, criatividade: 84, ovr: 86 },
+  { id: "ajota-sp", nome: "Ajota", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 86, construcao: 85, diccao: 88, criatividade: 84, ovr: 86 },
+  { id: "brennuz-sp", nome: "Brennuz", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 85, construcao: 86, diccao: 88, criatividade: 87, ovr: 87 },
+  { id: "bask-sp", nome: "Bask", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 85, construcao: 88, diccao: 89, criatividade: 86, ovr: 87 },
+  { id: "levinsk-sp", nome: "Levinsk", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 86, construcao: 84, diccao: 87, criatividade: 85, ovr: 86 },
+  { id: "magrão-sp", nome: "Magrão", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 86, construcao: 87, diccao: 89, criatividade: 88, ovr: 87 },
+  { id: "dehat-sp", nome: "Dehat", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 84, construcao: 83, diccao: 82, criatividade: 85, ovr: 84 },
+  { id: "fortes-sp", nome: "Fortes", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 87, construcao: 86, diccao: 85, criatividade: 83, ovr: 85 },
+  { id: "lil-vi-sp", nome: "Lil vi", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 81, construcao: 85, diccao: 82, criatividade: 84, ovr: 83 },
+  { id: "mano-ayron-sp", nome: "Mano ayron", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 85, construcao: 84, diccao: 87, criatividade: 86, ovr: 86 },
+  { id: "grafiteh-sp", nome: "Grafiteh", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 84, diccao: 87, criatividade: 88, ovr: 86 },
+  { id: "glaubin-sp", nome: "Glaubin", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 84, construcao: 83, diccao: 82, criatividade: 85, ovr: 84 },
+
+  { id: "joão-vega-rj", nome: "João Vega", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 88, construcao: 85, diccao: 86, criatividade: 87, ovr: 86 },
+  { id: "mt-rj", nome: "MT", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 92, punchline: 88, construcao: 90, diccao: 89, criatividade: 91, ovr: 90 },
+  { id: "wl-bxd-rj", nome: "WL.bxd", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 91, punchline: 89, construcao: 87, diccao: 90, criatividade: 88, ovr: 89 },
+  { id: "jhony-rj", nome: "Jhony", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 85, construcao: 89, diccao: 87, criatividade: 86, ovr: 87 },
+  { id: "malagueta-rj", nome: "Malagueta", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 88, construcao: 89, diccao: 85, criatividade: 86, ovr: 87 },
+  { id: "rdx-bxd-rj", nome: "Rdx.bxd", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 85, construcao: 86, diccao: 84, criatividade: 88, ovr: 86 },
+  { id: "torvi-rj", nome: "Torvi", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 84, construcao: 85, diccao: 87, criatividade: 86, ovr: 85 },
+  { id: "zeca-passarin-rj", nome: "Zeca Passarin", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 83, construcao: 84, diccao: 87, criatividade: 85, ovr: 85 },
+  { id: "rico-mesquita-rj", nome: "Rico Mesquita", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 79, construcao: 82, diccao: 80, criatividade: 78, ovr: 80 },
+  { id: "pyetrin-rj", nome: "Pyetrin", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 84, diccao: 82, criatividade: 81, ovr: 83 },
+  { id: "perigo-rj", nome: "Perigo", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 83, construcao: 86, diccao: 84, criatividade: 85, ovr: 84 },
+  { id: "schuller-rj", nome: "Schuller", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 82, construcao: 84, diccao: 81, criatividade: 85, ovr: 83 },
+  { id: "neo-rj", nome: "Neo", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 94, punchline: 92, construcao: 95, diccao: 91, criatividade: 93, ovr: 93 },
+  { id: "devilzinha-rj", nome: "Devilzinha", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 88, construcao: 84, diccao: 86, criatividade: 85, ovr: 86 },
+  { id: "zed-rj", nome: "Zed", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 88, diccao: 87, criatividade: 84, ovr: 86 },
+  { id: "braga-bxd-rj", nome: "Braga bxd", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 83, construcao: 84, diccao: 86, criatividade: 85, ovr: 85 },
+  { id: "phl-rj", nome: "Phl", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 85, diccao: 81, criatividade: 83, ovr: 83 },
+  { id: "mr-pac-rj", nome: "Mr pac", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 81, construcao: 80, diccao: 78, criatividade: 79, ovr: 80 },
+  { id: "adrien-rj", nome: "Adrien", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 85, construcao: 84, diccao: 83, criatividade: 86, ovr: 84 },
+  { id: "pd-rj", nome: "PD", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 84, construcao: 83, diccao: 80, criatividade: 82, ovr: 82 },
+  { id: "fetlook-rj", nome: "Fetlook", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 85, construcao: 84, diccao: 83, criatividade: 81, ovr: 83 },
+  { id: "draco-rj", nome: "Draco", estado: "RJ", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 86, construcao: 87, diccao: 84, criatividade: 85, ovr: 85 },
+  { id: "hope-am", nome: "Hope", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 89, punchline: 90, construcao: 87, diccao: 88, criatividade: 86, ovr: 88 },
+  { id: "menor-am", nome: "Menor", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 92, punchline: 89, construcao: 88, diccao: 91, criatividade: 90, ovr: 90 },
+  { id: "w-mc-am", nome: "W MC", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 88, punchline: 86, construcao: 90, diccao: 87, criatividade: 89, ovr: 88 },
+  { id: "mineiro-am", nome: "Mineiro", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 85, construcao: 82, diccao: 83, criatividade: 84, ovr: 84 },
+  { id: "elle-am", nome: "Elle", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 85, diccao: 81, criatividade: 83, ovr: 83 },
+  { id: "big-xang-am", nome: "Big Xang", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 86, punchline: 83, construcao: 84, diccao: 87, criatividade: 85, ovr: 85 },
+  { id: "coy-am", nome: "Coy", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 81, construcao: 84, diccao: 80, criatividade: 83, ovr: 82 },
+  { id: "dark-am", nome: "Dark", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 81, construcao: 82, diccao: 85, criatividade: 83, ovr: 83 },
+  { id: "gustavo-mc-am", nome: "Gustavo MC", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 83, construcao: 80, diccao: 81, criatividade: 82, ovr: 82 },
+  { id: "isa-mc-am", nome: "Isa MC", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 78, punchline: 81, construcao: 80, diccao: 79, criatividade: 82, ovr: 80 },
+  { id: "ítallo-mc-am", nome: "Ítallo MC", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 82, punchline: 80, construcao: 78, diccao: 81, criatividade: 79, ovr: 80 },
+  { id: "jhones-am", nome: "Jhones", estado: "AM", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 82, construcao: 79, diccao: 80, criatividade: 83, ovr: 81 },
+
+  { id: "dopre-sp", nome: "Dopre", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 82, construcao: 86, diccao: 83, criatividade: 85, ovr: 84 },
+  { id: "czp-sp", nome: "Czp", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 79, construcao: 82, diccao: 78, criatividade: 80, ovr: 80 },
+  { id: "killua-sp", nome: "Killua", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 81, construcao: 82, diccao: 83, criatividade: 80, ovr: 82 },
+  { id: "ronnin-sp", nome: "Ronnin", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 85, construcao: 86, diccao: 87, criatividade: 88, ovr: 86 },
+  { id: "jorgin-sp", nome: "Jorgin", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 86, construcao: 84, diccao: 88, criatividade: 85, ovr: 86 },
+  { id: "dherick-sp", nome: "Dherick", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 85, punchline: 83, construcao: 87, diccao: 84, criatividade: 86, ovr: 85 },
+  { id: "lecroy-sp", nome: "Lecroy", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 87, punchline: 84, construcao: 85, diccao: 83, criatividade: 86, ovr: 85 },
+  { id: "blackout-sp", nome: "Blackout", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 83, punchline: 84, construcao: 86, diccao: 87, criatividade: 85, ovr: 85 },
+  { id: "pedro-trick-sp", nome: "Pedro Trick", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 78, construcao: 80, diccao: 82, criatividade: 79, ovr: 80 },
+  { id: "lil-vicky-sp", nome: "Lil Vicky", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 81, punchline: 82, construcao: 79, diccao: 80, criatividade: 78, ovr: 80 },
+  { id: "ravena-sp", nome: "Ravena", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 81, construcao: 85, diccao: 83, criatividade: 82, ovr: 83 },
+  { id: "araps-sp", nome: "Araps", estado: "SP", anosNacional: [], titulosNacionais: 0, estadual2025: false, flow: 84, punchline: 86, construcao: 85, diccao: 88, criatividade: 87, ovr: 86 },
+];
+
+
+
+const HISTORICAL_NATIONALS = {
+  2017: { campeao: "Cesar", vice: "Drizzy" },
+  2018: { campeao: "Miliano", vice: "NG" },
+  2019: { campeao: "MCharles", vice: "Noventa" },
+  2020: { campeao: "Alves", vice: "Vinicius ZN" },
+  2022: { campeao: "Big Mike", vice: "Youngui" },
+  2023: { campeao: "Kaemy", vice: "Neo" },
+  2024: { campeao: "Martzin", vice: "Japa" },
+  2025: { campeao: "Japa", vice: "Barreto" },
+};
+
+// ---------------------------------------------------------
+// Geração procedural de adversários de preenchimento (não históricos)
+// ---------------------------------------------------------
+
+function opcaoComoOponente(mc) {
+  return {
+    id: mc.id,
+    nome: mc.nome,
+    estado: mc.estado,
+    ovr: mc.ovr,
+    atributos: { flow: mc.flow, punchline: mc.punchline, construcao: mc.construcao, diccao: mc.diccao, criatividade: mc.criatividade },
+    historico: true,
+  };
+}
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Quanto mais fundo na chave, maior a chance de cair MC com OVR mais alto.
+// Em dificuldade 0 o sorteio é uniforme; conforme a dificuldade sobe, o peso
+// de cada MC vira ovr^expoente, empurrando a probabilidade pros mais fortes.
+const DIFICULDADE_BASE = { "seletiva-regional": 0.0, "seletiva-estadual": 0.05, "repescagem": 0.08, "nacional": 0.12 };
+const DIFICULDADE_INCREMENTO = { "seletiva-regional": 0.01, "seletiva-estadual": 0.02, "repescagem": 0.02, "nacional": 0.03 };
+
+function calcularDificuldade(faseKey, roundIndex) {
+  const base = DIFICULDADE_BASE[faseKey] ?? 0.1;
+  const inc = DIFICULDADE_INCREMENTO[faseKey] ?? 0.05;
+  return Math.min(1, base + inc * (roundIndex - 1));
+}
+
+function pickPonderado(candidatos, dificuldade) {
+  const expoente = dificuldade * 3; // viés bem mais leve, pra não virar handicap
+  const pesos = candidatos.map((m) => Math.pow(m.ovr, expoente));
+  const total = pesos.reduce((a, b) => a + b, 0);
+  if (!(total > 0)) return pickRandom(candidatos);
+  let r = Math.random() * total;
+  for (let i = 0; i < candidatos.length; i++) {
+    r -= pesos[i];
+    if (r <= 0) return candidatos[i];
+  }
+  return candidatos[candidatos.length - 1];
+}
+
+function sortearAdversario(faseKey, roundIndex, estadoJogador, usedNomes, usedEstadosNacional) {
+  const querMesmoEstado = faseKey === "seletiva-regional" || faseKey === "seletiva-estadual";
+  const querOutroEstado = faseKey === "nacional"; // repescagem usa o banco geral, sem restrição de estado
+  const dificuldade = calcularDificuldade(faseKey, roundIndex);
+
+  function filtroBase(m, permitirRepetidos) {
+    if (state.career && state.career.player && state.career.player.assumedId === m.id) return false;
+    if (!permitirRepetidos && usedNomes.has(m.id)) return false;
+    if (querMesmoEstado) return m.estado === estadoJogador;
+    if (querOutroEstado) return m.estado !== estadoJogador;
+    return true;
+  }
+
+  if (querOutroEstado) {
+    // no Nacional, no máximo 1 MC por estado na mesma campanha
+    let pool = HISTORICAL_MCS.filter((m) => filtroBase(m, false) && !usedEstadosNacional.has(m.estado));
+    if (pool.length === 0) pool = HISTORICAL_MCS.filter((m) => filtroBase(m, true) && !usedEstadosNacional.has(m.estado));
+    if (pool.length === 0) pool = HISTORICAL_MCS.filter((m) => filtroBase(m, true)); // último recurso: acabaram os estados novos
+    return opcaoComoOponente(pickPonderado(pool, dificuldade));
+  }
+
+  let pool = HISTORICAL_MCS.filter((m) => filtroBase(m, false));
+  if (pool.length === 0) pool = HISTORICAL_MCS.filter((m) => filtroBase(m, true));
+  return opcaoComoOponente(pickPonderado(pool, dificuldade));
+}
+
+// ---------------------------------------------------------
+// Estrutura de fases / rodadas
+// ---------------------------------------------------------
+
+const FASES = {
+  "seletiva-regional": { label: "Seletiva Regional", rounds: 4 },
+  "seletiva-estadual": { label: "Seletiva Estadual", rounds: 4 },
+  "repescagem": { label: "Repescagem", rounds: 3 },
+  "nacional": { label: "Nacional", rounds: 5 },
+};
+const ROUND_NAMES_BY_REMAINING = { 1: "Final", 2: "Semifinal", 3: "Quartas de Final", 4: "Oitavas de Final", 5: "Dezesseis-avos de Final" };
+
+function roundLabel(roundIndex, totalRounds) {
+  const remaining = totalRounds - roundIndex + 1;
+  return ROUND_NAMES_BY_REMAINING[remaining] || `Rodada ${roundIndex}`;
+}
+function stageLabelFor(faseKey, roundIndex) {
+  const fase = FASES[faseKey];
+  return `${fase.label} — ${roundLabel(roundIndex, fase.rounds)} (${roundIndex}/${fase.rounds})`;
+}
+
+// retorna { fase, round } | 'ELIMINADO' | 'CAMPEAO'
+function nextStage(faseKey, roundIndex, won) {
+  const total = FASES[faseKey].rounds;
+  if (!won) {
+    if (faseKey === "seletiva-estadual" && roundIndex === total) return { fase: "repescagem", round: 1 };
+    return "ELIMINADO";
+  }
+  if (roundIndex < total) return { fase: faseKey, round: roundIndex + 1 };
+  if (faseKey === "seletiva-regional") return { fase: "seletiva-estadual", round: 1 };
+  if (faseKey === "seletiva-estadual") return { fase: "nacional", round: 1 };
+  if (faseKey === "repescagem") return { fase: "nacional", round: 1 };
+  if (faseKey === "nacional") return "CAMPEAO";
+}
+
+// ---------------------------------------------------------
+// GOAT Chase — pontuação por fase (índice = rodadas vencidas naquela fase)
+// ---------------------------------------------------------
+
+const GOAT_PONTOS_REGIONAL = [0, 1, 2, 3, 4];
+const GOAT_PONTOS_ESTADUAL = [0, 1, 3, 4, 5];
+const GOAT_PONTOS_NACIONAL = [0, 1, 2, 4, 6, 8];
+
+// ---------------------------------------------------------
+// Simulação de batalha — melhor de 3 rounds, resultado sempre
+// 2x0, 0x2, 2x1 ou 1x2, ponderado pelo OVR dos dois lados.
+// ---------------------------------------------------------
+
+function simularBatalha(ovrJogador, ovrAdversario) {
+  let pWins = 0, oWins = 0;
+  const rounds = [];
+  while (pWins < 2 && oWins < 2) {
+    const diff = ovrJogador - ovrAdversario;
+    let p = 0.5 + diff * 0.045; // OVR pesa mais na simulação de cada round
+    p = Math.max(0.04, Math.min(0.96, p));
+    const jogadorVence = Math.random() < p;
+    if (jogadorVence) { pWins++; rounds.push("V"); } else { oWins++; rounds.push("D"); }
+  }
+  return { pWins, oWins, rounds, vencedor: pWins > oWins ? "jogador" : "adversario" };
+}
+
+function sortearAdversarioGenerico(faseKey, estadoAtor, usedNomesLocal, usedEstadosNacionalLocal, idAtor) {
+  const querMesmoEstado = faseKey === "seletiva-regional" || faseKey === "seletiva-estadual";
+  const querOutroEstado = faseKey === "nacional";
+  function filtro(m, permitirRepetidos) {
+    if (m.id === idAtor) return false;
+    if (!permitirRepetidos && usedNomesLocal.has(m.id)) return false;
+    if (querMesmoEstado) return m.estado === estadoAtor;
+    if (querOutroEstado) return m.estado !== estadoAtor && !usedEstadosNacionalLocal.has(m.estado);
+    return true;
+  }
+  let pool = HISTORICAL_MCS.filter((m) => filtro(m, false));
+  if (pool.length === 0) pool = HISTORICAL_MCS.filter((m) => filtro(m, true));
+  if (pool.length === 0) return null;
+  return pickPonderado(pool, 0.4);
+}
+
+// Simula uma carreira inteira (várias temporadas) de um MC qualquer, pro ranking do
+// GOAT Chase. É uma versão simplificada: não rastreia campeão reinante pros rivais,
+// só aplica a pontuação de fase + os bônus/downgrade de placar (2x0 / 2x0 na 1ª fase).
+function simularCarreiraCompleta(ovrInicial, estadoAtor, idAtor, numTemporadas) {
+  let pontosTotais = 0;
+  for (let t = 0; t < numTemporadas; t++) {
+    const usedNomesLocal = new Set([idAtor]);
+    const usedEstadosNacionalLocal = new Set();
+    let faseKey = "seletiva-regional";
+    let round = 1;
+    const roundsWon = { "seletiva-regional": 0, "seletiva-estadual": 0, "nacional": 0 };
+    let pontosTemporada = 0;
+    let seguranca = 0;
+    while (seguranca < 30) {
+      seguranca++;
+      const oponente = sortearAdversarioGenerico(faseKey, estadoAtor, usedNomesLocal, usedEstadosNacionalLocal, idAtor);
+      if (!oponente) break;
+      usedNomesLocal.add(oponente.id);
+      if (faseKey === "nacional") usedEstadosNacionalLocal.add(oponente.estado);
+      const resultado = simularBatalha(ovrInicial, oponente.ovr);
+      const venceu = resultado.vencedor === "jogador";
+      if (venceu) {
+        if (resultado.oWins === 0) pontosTemporada += 2;
+        if (faseKey !== "repescagem") roundsWon[faseKey] = (roundsWon[faseKey] || 0) + 1;
+      } else if (round === 1 && resultado.pWins === 0 && resultado.oWins === 2 && faseKey !== "repescagem") {
+        pontosTemporada -= 2;
+      }
+      const prox = nextStage(faseKey, round, venceu);
+      if (prox === "ELIMINADO") break;
+      if (prox === "CAMPEAO") { roundsWon.nacional = FASES.nacional.rounds; break; }
+      faseKey = prox.fase;
+      round = prox.round;
+    }
+    pontosTemporada += GOAT_PONTOS_REGIONAL[Math.min(roundsWon["seletiva-regional"], GOAT_PONTOS_REGIONAL.length - 1)] || 0;
+    pontosTemporada += GOAT_PONTOS_ESTADUAL[Math.min(roundsWon["seletiva-estadual"], GOAT_PONTOS_ESTADUAL.length - 1)] || 0;
+    pontosTemporada += GOAT_PONTOS_NACIONAL[Math.min(roundsWon["nacional"], GOAT_PONTOS_NACIONAL.length - 1)] || 0;
+    pontosTotais += pontosTemporada;
+  }
+  return pontosTotais;
+}
+
+function simularGoatChase() {
+  const c = state.career;
+  const numTemporadas = Math.max(1, c.history.length);
+  const idJogador = c.player.assumedId || null;
+  const estadoJogador = c.player.estado;
+  const meusPontos = c.stats.goatChasePontos || 0;
+
+  const rivaisEstado = HISTORICAL_MCS.filter((m) => m.estado === estadoJogador && m.id !== idJogador);
+  const rivaisBrasil = HISTORICAL_MCS.filter((m) => m.id !== idJogador);
+
+  const rankingEstado = rivaisEstado.map((m) => ({ nome: m.nome, estado: m.estado, pontos: simularCarreiraCompleta(m.ovr, m.estado, m.id, numTemporadas) }));
+  rankingEstado.push({ nome: c.player.vulgo, estado: estadoJogador, pontos: meusPontos, isPlayer: true });
+  rankingEstado.sort((a, b) => b.pontos - a.pontos);
+
+  const rankingBrasil = rivaisBrasil.map((m) => ({ nome: m.nome, estado: m.estado, pontos: simularCarreiraCompleta(m.ovr, m.estado, m.id, numTemporadas) }));
+  rankingBrasil.push({ nome: c.player.vulgo, estado: estadoJogador, pontos: meusPontos, isPlayer: true });
+  rankingBrasil.sort((a, b) => b.pontos - a.pontos);
+
+  c.goatChase = { rankingEstado, rankingBrasil, temporadasConsideradas: numTemporadas };
+}
+
+function aplicarEvolucao(player, ganho) {
+  const chaves = ATTRS.map((a) => a.key);
+  const ordem = [...chaves].sort(() => Math.random() - 0.5);
+  let restante = ganho;
+  let voltas = 0;
+  while (restante > 0 && voltas < 1000) {
+    const k = ordem[voltas % ordem.length];
+    if (player.atributos[k] < 99) {
+      player.atributos[k] += 1;
+      restante -= 1;
+    }
+    voltas++;
+    if (ordem.every((k2) => player.atributos[k2] >= 99)) break; // todo mundo já no teto
+  }
+  player.ovr = Math.round(chaves.reduce((acc, k) => acc + player.atributos[k], 0) / chaves.length);
+}
+
+function calcularGanhoOvrNacional(roundsGanhos, chegouFinal, campeao) {
+  if (campeao) return 12;
+  if (chegouFinal) return 10;
+  return roundsGanhos * 2;
+}
+
+// ---------------------------------------------------------
+// Persistência — 3 slots em localStorage
+// ---------------------------------------------------------
+
+const SLOT_KEYS = ["slot1", "slot2", "slot3"];
+let slotsCache = { slot1: null, slot2: null, slot3: null };
+
+async function carregarTodosSlots() {
+  for (const key of SLOT_KEYS) {
+    try {
+      const res = await window.storage.get(key, false);
+      slotsCache[key] = res ? JSON.parse(res.value) : null;
+    } catch {
+      slotsCache[key] = null;
+    }
+  }
+}
+
+function carregarSlots() {
+  return slotsCache;
+}
+
+// ---------------------------------------------------------
+// Ajustes de atributos de MCs feitos no modo edição (senha)
+// ---------------------------------------------------------
+
+async function carregarOverridesMcs() {
+  try {
+    const res = await window.storage.get("mc-overrides", false);
+    const overrides = res ? JSON.parse(res.value) : {};
+    Object.keys(overrides).forEach((id) => {
+      const mc = HISTORICAL_MCS.find((m) => m.id === id);
+      if (mc) Object.assign(mc, overrides[id]);
+    });
+  } catch {}
+}
+
+async function salvarOverrideMc(mc) {
+  try {
+    const res = await window.storage.get("mc-overrides", false);
+    const overrides = res ? JSON.parse(res.value) : {};
+    overrides[mc.id] = { flow: mc.flow, punchline: mc.punchline, construcao: mc.construcao, diccao: mc.diccao, criatividade: mc.criatividade, ovr: mc.ovr };
+    await window.storage.set("mc-overrides", JSON.stringify(overrides), false);
+  } catch (e) {
+    console.error("Falha ao salvar ajuste de MC:", e);
+  }
+}
+
+async function salvarCarreiraAtual() {
+  if (!state.slotKey || !state.career) return;
+  slotsCache[state.slotKey] = state.career;
+  try {
+    await window.storage.set(state.slotKey, JSON.stringify(state.career), false);
+  } catch (e) {
+    console.error("Falha ao salvar carreira:", e);
+  }
+}
+
+// ---------------------------------------------------------
+// Estado da aplicação
+// ---------------------------------------------------------
+
+const state = {
+  view: "menu",
+  slotKey: null,
+  career: null,
+  draft: null,       // { index, escolhidos, skips, opcoes }
+  battle: null,       // { fase, round, oponente, resultado }
+  usedNomes: null,    // Set — reseta a cada temporada
+  usedEstadosNacional: null, // Set — estados já enfrentados no Nacional dessa temporada (máx 1 MC por estado)
+  nacionalRoundsWon: 0,
+  confirmacaoPendente: null, // { mensagem, onConfirm } — confirmação própria, sem depender do confirm() do navegador
+  mcEscolhido: null, // MC histórico selecionado no fluxo de "assumir carreira existente"
+  treino: null, // { pontosRestantes } — fase de treinamento entre temporadas
+  adminAutenticado: false,
+  mcEditando: null,
+  desafio: null,
+  duelo: null,
+  chave: { "seletiva-regional": null, "seletiva-estadual": null },
+  faseFavoritos: null,
+  chaveVisualizando: null,
+};
+
+function novaCareiraObj(slotKey) {
+  return {
+    slot: slotKey,
+    player: null,
+    ano: 2026,
+    history: [],
+    stats: {
+      vitorias2x0: 0, derrotas2x0: 0,
+      vitorias2x1: 0, derrotas2x1: 0,
+      titulosRegional: 0,
+      titulosEstadual: 0, vicesEstadual: 0,
+      titulosNacional: 0, vicesNacional: 0,
+      repescagensDisputadas: 0, repescagensVencidas: 0,
+      melhorResultadoNacional: null,
+      goatChasePontos: 0,
+    },
+    simulatedNationals: {},
+    simulatedEstaduais: {},
+    reinanteEstadual: null,
+    reinanteNacional: (() => {
+      const anos = Object.keys(HISTORICAL_NATIONALS).map(Number).sort((a, b) => b - a);
+      const ultimoAno = anos[0];
+      return ultimoAno ? { nome: HISTORICAL_NATIONALS[ultimoAno].campeao, estado: (HISTORICAL_MCS.find((m) => m.nome === HISTORICAL_NATIONALS[ultimoAno].campeao) || {}).estado || null } : null;
+    })(),
+    goatChase: null,
+    aposentado: false,
+    confrontosDiretos: {}, // { [idAdversario]: { nome, estado, vitorias, derrotas } }
+    sequencia2x0Atual: 0,
+    sequencia2x0Maxima: 0,
+    ultimoEvento: null, // { texto, ano }
+    ultimoDeclinio: null, // { atributo, ano }
+    ultimoReves: null, // { atributo, ano }
+  };
+}
+
+// ---------------------------------------------------------
+// Render — ponto de entrada
+// ---------------------------------------------------------
+
+function render() {
+  const app = document.getElementById("app");
+  const confirmacaoHtml = state.confirmacaoPendente ? `
+    <div class="card dark" style="border:2px solid var(--red);">
+      <p class="lead">${state.confirmacaoPendente.mensagem}</p>
+      <button class="btn danger" onclick="confirmarAcaoPendente()">Confirmar</button>
+      <button class="btn secondary" onclick="cancelarAcaoPendente()">Cancelar</button>
+    </div>
+  ` : "";
+  app.innerHTML = `
+    <div class="header">
+      <h1>RUMO AO NACIONAL</h1>
+      <p>modo carreira — do bairro ao palco nacional</p>
+    </div>
+    ${confirmacaoHtml}
+    ${renderView()}
+  `;
+}
+
+function pedirConfirmacao(mensagem, onConfirm) {
+  state.confirmacaoPendente = { mensagem, onConfirm };
+  render();
+}
+function confirmarAcaoPendente() {
+  const acao = state.confirmacaoPendente && state.confirmacaoPendente.onConfirm;
+  state.confirmacaoPendente = null;
+  if (acao) acao();
+  else render();
+}
+function cancelarAcaoPendente() {
+  state.confirmacaoPendente = null;
+  render();
+}
+
+function renderView() {
+  switch (state.view) {
+    case "menu": return viewMenu();
+    case "slots-nova": return viewSlots(true);
+    case "slots-continuar": return viewSlots(false);
+    case "modo-criacao": return viewModoCriacao();
+    case "ficha": return viewFicha();
+    case "escolher-mc-existente": return viewEscolherMcExistente();
+    case "idade-mc-existente": return viewIdadeMcExistente();
+    case "draft": return viewDraft();
+    case "treinamento": return viewTreinamento();
+    case "admin-senha": return viewAdminSenha();
+    case "admin-lista": return viewAdminLista();
+    case "admin-editar": return viewAdminEditar();
+    case "batalha": return viewBatalha();
+    case "fim-temporada": return viewFimTemporada();
+    case "hub-carreira": return viewHubCarreira();
+    case "quadro-carreira": return viewQuadroCarreira();
+    case "historico-nacional": return viewHistoricoNacional();
+    case "banco-mcs": return viewBancoMcs();
+    case "desafio-escolher-jogador": return viewDesafioEscolherJogador();
+    case "desafio-escolher-rival": return viewDesafioEscolherRival();
+    case "desafio-batalha": return viewDesafioBatalha();
+    case "duelo-nomes-times": return viewDueloNomesTimes();
+    case "duelo-draft": return viewDueloDraft();
+    case "duelo-formato": return viewDueloFormato();
+    case "duelo-batalha-interativa": return viewDueloBatalhaInterativa();
+    case "duelo-resultado": return viewDueloResultado();
+    case "favoritos": return viewFavoritos();
+    case "chaveamento": return viewChaveamento();
+    default: return "";
+  }
+}
+
+// ---------------------------------------------------------
+// Tela: Menu
+// ---------------------------------------------------------
+
+function viewMenu() {
+  return `
+    <div class="card">
+      <p class="lead">Crie seu MC, escolha o estado que vai representar e tente chegar ao topo: Seletiva Regional, Seletiva Estadual, Repescagem (se for vice) e o Nacional.</p>
+    </div>
+    <button class="btn" onclick="irParaSlotsNova()">NOVA CARREIRA</button>
+    <button class="btn secondary" onclick="irParaSlotsContinuar()">MINHAS CARREIRAS</button>
+    <button class="btn secondary" onclick="irParaHistoricoNacional()">HISTÓRICO NACIONAL</button>
+    <button class="btn secondary" onclick="irParaBancoMcs()">BANCO DE MCs</button>
+    <button class="btn secondary" onclick="irParaAdminSenha()">⚙️ EDITAR BANCO DE MCs</button>
+    <button class="btn secondary" onclick="irParaDesafio()">🏟️ DESAFIO LENDÁRIO</button>
+    <button class="btn secondary" onclick="irParaDuelo()">🎮 MODO 2 JOGADORES</button>
+  `;
+}
+
+function irParaSlotsNova() { state.view = "slots-nova"; render(); }
+function irParaSlotsContinuar() { state.view = "slots-continuar"; render(); }
+function irParaHistoricoNacional() { state.view = "historico-nacional"; render(); }
+function irParaBancoMcs() { state.view = "banco-mcs"; render(); }
+function voltarMenu() { state.view = "menu"; state.career = null; state.slotKey = null; render(); }
+
+// ---------------------------------------------------------
+// Tela: Slots
+// ---------------------------------------------------------
+
+function viewSlots(paraNova) {
+  const slots = carregarSlots();
+  const cards = [1, 2, 3].map((n) => {
+    const key = "slot" + n;
+    const c = slots[key];
+    if (!c || !c.player) {
+      return `<div class="slot-card" onclick="${paraNova ? `escolherSlotNova('${key}')` : ""}">
+        <h3>Slot ${n}</h3>
+        <p>${paraNova ? "vazio — toque para criar" : "vazio"}</p>
+      </div>`;
+    }
+    const s = c.stats;
+    return `<div class="slot-card" onclick="${paraNova ? `escolherSlotNova('${key}')` : `escolherSlotContinuar('${key}')`}">
+      <h3>${c.player.vulgo || c.player.nome} <span style="font-size:0.7rem;color:var(--paper-dim)">(${c.player.estado})</span></h3>
+      <p>${c.player.idade} anos · OVR ${c.player.ovr} · ${c.history.length} temporada(s) · ${s.titulosNacional} título(s) nacional(is)</p>
+      ${paraNova ? `<p style="color:var(--red)">toque para sobrescrever</p>` : ""}
+    </div>`;
+  }).join("");
+  return `<div class="card dark"><h2>${paraNova ? "Escolha um slot" : "Suas carreiras"}</h2>${cards}</div>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar</button>`;
+}
+
+function escolherSlotNova(key) {
+  const slots = carregarSlots();
+  if (slots[key] && slots[key].player) {
+    pedirConfirmacao("Esse slot já tem uma carreira salva. Sobrescrever?", () => {
+      state.slotKey = key;
+      state.career = novaCareiraObj(key);
+      state.view = "modo-criacao";
+      render();
+    });
+    return;
+  }
+  state.slotKey = key;
+  state.career = novaCareiraObj(key);
+  state.view = "modo-criacao";
+  render();
+}
+
+function viewModoCriacao() {
+  return `
+    <div class="card">
+      <h2>Como você quer começar?</h2>
+      <p class="lead">Dá pra criar um MC novo do zero, ou assumir a carreira de um dos MCs reais que já estão no banco (ele some do sorteio de adversários pro resto dessa carreira).</p>
+    </div>
+    <button class="btn" onclick="state.view='ficha'; render();">CRIAR UM MC NOVO</button>
+    <button class="btn secondary" onclick="state.view='escolher-mc-existente'; render();">ASSUMIR MC JÁ EXISTENTE</button>
+    <button class="btn secondary" onclick="voltarMenu()">Cancelar</button>
+  `;
+}
+
+function viewEscolherMcExistente() {
+  const porEstado = {};
+  HISTORICAL_MCS.forEach((m) => { (porEstado[m.estado] = porEstado[m.estado] || []).push(m); });
+  const estados = Object.keys(porEstado).sort();
+  const blocos = estados.map((uf) => {
+    const linhas = porEstado[uf]
+      .slice()
+      .sort((a, b) => b.ovr - a.ovr)
+      .map((m) => `
+        <div class="option-card" onclick="escolherMcExistente('${m.id}')">
+          <span class="opt-val">OVR ${m.ovr}</span>
+          <span class="opt-name">${m.nome}</span>
+        </div>
+      `).join("");
+    return `<div class="card dark"><h2>${uf}</h2><div class="grid">${linhas}</div></div>`;
+  }).join("");
+  return `
+    <div class="card">
+      <p class="lead">Escolha o MC cuja carreira você vai assumir.</p>
+    </div>
+    ${blocos}
+    <button class="btn secondary" onclick="state.view='modo-criacao'; render();">Voltar</button>
+  `;
+}
+
+function escolherMcExistente(id) {
+  const mc = HISTORICAL_MCS.find((m) => m.id === id);
+  if (!mc) return;
+  state.mcEscolhido = mc;
+  state.view = "idade-mc-existente";
+  render();
+}
+
+function viewIdadeMcExistente() {
+  const mc = state.mcEscolhido;
+  return `
+    <div class="card">
+      <h2>Assumindo ${mc.nome} (${mc.estado})</h2>
+      <p class="lead">OVR ${mc.ovr} — Flow ${mc.flow}, Punchline ${mc.punchline}, Construção ${mc.construcao}, Dicção ${mc.diccao}, Criatividade ${mc.criatividade}.</p>
+      <label class="field-label">Idade</label>
+      <input id="f-idade-existente" placeholder="Ex: 24" />
+      <div id="f-erro-existente" style="color:var(--red);font-size:0.8rem;margin-top:4px;"></div>
+    </div>
+    <button class="btn" onclick="confirmarMcExistente()">COMEÇAR CARREIRA COMO ${mc.nome}</button>
+    <button class="btn secondary" onclick="state.view='escolher-mc-existente'; render();">Voltar</button>
+  `;
+}
+
+function confirmarMcExistente() {
+  const idade = Number(document.getElementById("f-idade-existente").value);
+  if (!idade || idade <= 0) {
+    document.getElementById("f-erro-existente").textContent = "Digite uma idade válida.";
+    return;
+  }
+  const mc = state.mcEscolhido;
+  state.career.player = {
+    nome: mc.nome, vulgo: mc.nome, idade, genero: null, estado: mc.estado,
+    atributos: { flow: mc.flow, punchline: mc.punchline, construcao: mc.construcao, diccao: mc.diccao, criatividade: mc.criatividade },
+    ovr: mc.ovr,
+    assumedId: mc.id,
+    pontosTreinoPendentes: 0,
+  };
+  salvarCarreiraAtual();
+  iniciarTemporada();
+}
+
+function escolherSlotContinuar(key) {
+  const slots = carregarSlots();
+  if (!slots[key] || !slots[key].player) return;
+  state.slotKey = key;
+  state.career = slots[key];
+  state.view = "hub-carreira";
+  render();
+}
+
+// ---------------------------------------------------------
+// Tela: Ficha do MC
+// ---------------------------------------------------------
+
+function viewFicha() {
+  const estadosDisponiveis = [...new Set(HISTORICAL_MCS.map((m) => m.estado))].sort();
+  const opcoesEstado = estadosDisponiveis.map((uf) => `<option value="${uf}">${uf}</option>`).join("");
+  return `
+    <div class="card">
+      <h2>Crie seu MC</h2>
+      <label class="field-label">Nome</label>
+      <input id="f-nome" placeholder="Nome real" />
+      <label class="field-label">Vulgo</label>
+      <input id="f-vulgo" placeholder="Nome de batalha" />
+      <div class="grid cols-3">
+        <div>
+          <label class="field-label">Idade</label>
+          <input id="f-idade" placeholder="Ex: 17" />
+        </div>
+        <div style="grid-column: span 2;">
+          <label class="field-label">Gênero</label>
+          <select id="f-genero">
+            <option>Masculino</option>
+            <option>Feminino</option>
+            <option>Não-binário</option>
+            <option>Prefiro não dizer</option>
+          </select>
+        </div>
+      </div>
+      <label class="field-label">Estado que vai representar</label>
+      <select id="f-estado">${opcoesEstado}</select>
+      <div id="f-erro" style="color:var(--red);font-size:0.8rem;margin-top:4px;"></div>
+    </div>
+    <button class="btn" onclick="confirmarFicha()">IR PRO DRAFT DE ATRIBUTOS</button>
+    <button class="btn secondary" onclick="voltarMenu()">Cancelar</button>
+  `;
+}
+
+function confirmarFicha() {
+  const nome = document.getElementById("f-nome").value.trim();
+  const vulgo = document.getElementById("f-vulgo").value.trim();
+  const idade = Number(document.getElementById("f-idade").value);
+  const genero = document.getElementById("f-genero").value;
+  const estado = document.getElementById("f-estado").value;
+  if (!nome || !vulgo || !idade || idade <= 0) {
+    document.getElementById("f-erro").textContent = "Preencha nome, vulgo e uma idade válida.";
+    return;
+  }
+  state.career.player = { nome, vulgo, idade, genero, estado, atributos: null, ovr: null, pontosTreinoPendentes: 0 };
+  iniciarDraft();
+}
+
+// ---------------------------------------------------------
+// Tela: Draft de atributos
+// ---------------------------------------------------------
+
+function gerarOpcoesDraft(attrKey) {
+  const embaralhado = [...HISTORICAL_MCS].sort(() => Math.random() - 0.5);
+  return embaralhado.slice(0, 3).map((m) => ({ nome: m.nome, estado: m.estado, valor: m[attrKey] }));
+}
+
+function iniciarDraft() {
+  state.draft = { index: 0, escolhidos: {}, skips: 2, opcoes: gerarOpcoesDraft(ATTRS[0].key) };
+  state.view = "draft";
+  render();
+}
+
+function viewDraft() {
+  const d = state.draft;
+  const attr = ATTRS[d.index];
+  const opts = d.opcoes.map((o, i) => `
+    <div class="option-card" onclick="escolherOpcaoDraft(${i})">
+      <span class="opt-val">${o.valor}</span>
+      <span class="opt-name">${o.nome}</span><br/>
+      <span style="font-size:0.68rem;color:var(--paper-dim)">${o.estado}</span>
+    </div>
+  `).join("");
+  return `
+    <div class="stage-label">Draft de atributos — ${d.index + 1}/5</div>
+    <div class="card dark">
+      <h2>${attr.label}</h2>
+      <p class="lead">Três MCs do banco histórico foram sorteados. Escolha de qual deles você herda o valor de ${attr.label}.</p>
+    </div>
+    <div class="grid" style="margin-bottom:12px;">${opts}</div>
+    <button class="btn secondary" ${d.skips <= 0 ? "disabled style='opacity:0.4'" : ""} onclick="pularDraft()">PULAR (sortear outros 3) — ${d.skips} restante(s)</button>
+  `;
+}
+
+function escolherOpcaoDraft(i) {
+  const d = state.draft;
+  const attr = ATTRS[d.index];
+  d.escolhidos[attr.key] = d.opcoes[i].valor;
+  d.index++;
+  if (d.index >= ATTRS.length) {
+    finalizarDraft();
+  } else {
+    d.opcoes = gerarOpcoesDraft(ATTRS[d.index].key);
+    render();
+  }
+}
+
+function pularDraft() {
+  const d = state.draft;
+  if (d.skips <= 0) return;
+  d.skips--;
+  d.opcoes = gerarOpcoesDraft(ATTRS[d.index].key);
+  render();
+}
+
+function finalizarDraft() {
+  const d = state.draft;
+  const soma = ATTRS.reduce((acc, a) => acc + d.escolhidos[a.key], 0);
+  const ovr = Math.round(soma / ATTRS.length);
+  state.career.player.atributos = d.escolhidos;
+  state.career.player.ovr = ovr;
+  salvarCarreiraAtual();
+  iniciarTemporada();
+}
+
+// ---------------------------------------------------------
+// Loop da temporada / batalhas
+// ---------------------------------------------------------
+
+function iniciarTemporada() {
+  state.usedNomes = new Set();
+  state.usedEstadosNacional = new Set();
+  state.nacionalRoundsWon = 0;
+  state.seasonBattles = [];
+  state.chave = { "seletiva-regional": null, "seletiva-estadual": null };
+  state.battle = { fase: "seletiva-regional", round: 1, oponente: null, resultado: null };
+  sortearProximoAdversario();
+}
+
+// ---------------------------------------------------------
+// Chave completa (16 MCs) — Seletiva Regional e Seletiva Estadual
+// ---------------------------------------------------------
+
+// Sorteia "quantidade" MCs sem NUNCA repetir ninguém: tenta primeiro no pool preferido
+// (mesmo estado), e só completa com o banco geral se esse pool não for suficiente —
+// nunca volta a sortear alguém já escolhido nessa mesma chave.
+function sortearUnicos(poolPreferido, quantidade, idsExcluirBase) {
+  const usados = new Set(idsExcluirBase);
+  const escolhidos = [];
+  let candidatos = poolPreferido.filter((m) => !usados.has(m.id));
+  while (escolhidos.length < quantidade && candidatos.length > 0) {
+    const m = pickRandom(candidatos);
+    escolhidos.push(m);
+    usados.add(m.id);
+    candidatos = poolPreferido.filter((m2) => !usados.has(m2.id));
+  }
+  if (escolhidos.length < quantidade) {
+    let geral = HISTORICAL_MCS.filter((m) => !usados.has(m.id));
+    while (escolhidos.length < quantidade && geral.length > 0) {
+      const m = pickRandom(geral);
+      escolhidos.push(m);
+      usados.add(m.id);
+      geral = HISTORICAL_MCS.filter((m2) => !usados.has(m2.id));
+    }
+  }
+  return escolhidos;
+}
+
+function gerarChaveCompleta(faseKey) {
+  const player = state.career.player;
+  const estadoJogador = player.estado;
+  const totalRodadas = FASES[faseKey].rounds;
+  const tamanhoChave = Math.pow(2, totalRodadas); // 16 pro Regional/Estadual, 32 pro Nacional
+  const qtdOutros = tamanhoChave - 1;
+
+  const idsExcluir = new Set();
+  if (player.assumedId) idsExcluir.add(player.assumedId);
+
+  let escolhidos;
+  if (faseKey === "nacional") {
+    // Nacional: ninguém do próprio estado do jogador (cada estado manda 1 representante),
+    // EXCETO o campeão do Estadual do estado dele, quando não foi o próprio jogador
+    // (jogador vice que se classificou pela repescagem): esse já tinha vaga garantida.
+    let campeaoEstadual = null;
+    const chaveEst = state.chave["seletiva-estadual"];
+    if (chaveEst) {
+      const finalEst = chaveEst.rodadas[FASES["seletiva-estadual"].rounds - 1][0];
+      if (finalEst && finalEst.vencedor && !finalEst.vencedor.ehJogador) campeaoEstadual = finalEst.vencedor;
+    }
+    if (campeaoEstadual) idsExcluir.add(campeaoEstadual.id);
+    const poolPreferido = HISTORICAL_MCS.filter((m) => m.estado !== estadoJogador);
+    const qtdSorteio = campeaoEstadual ? qtdOutros - 1 : qtdOutros;
+    escolhidos = sortearUnicos(poolPreferido, qtdSorteio, idsExcluir).map((m) => opcaoComoOponente(m));
+    if (campeaoEstadual) escolhidos.push({ ...campeaoEstadual });
+  } else {
+    // Em SP, quem já disputou o Regional não pode aparecer no Estadual
+    if (estadoJogador === "SP" && faseKey === "seletiva-estadual" && state.chave["seletiva-regional"]) {
+      state.chave["seletiva-regional"].idsUsados.forEach((id) => idsExcluir.add(id));
+    }
+    const poolPreferido = HISTORICAL_MCS.filter((m) => m.estado === estadoJogador);
+    escolhidos = sortearUnicos(poolPreferido, qtdOutros, idsExcluir).map((m) => opcaoComoOponente(m));
+  }
+
+  const titulosJogador = (state.career.stats.titulosRegional || 0) + (state.career.stats.titulosEstadual || 0) + (state.career.stats.titulosNacional || 0);
+  const jogadorSlot = {
+    id: "__jogador__", nome: player.vulgo, estado: player.estado, ovr: player.ovr,
+    atributos: { ...player.atributos }, ehJogador: true, titulosNacionais: titulosJogador,
+  };
+  const participantes = [jogadorSlot, ...escolhidos].sort(() => Math.random() - 0.5);
+
+  const rodada1 = [];
+  for (let i = 0; i < participantes.length; i += 2) {
+    rodada1.push({ a: participantes[i], b: participantes[i + 1], vencedor: null, placar: null });
+  }
+  const rodadas = [rodada1];
+  for (let r = 1; r < totalRodadas; r++) rodadas.push([]);
+
+  const chave = { participantes, rodadas, jogadorSlot, idsUsados: escolhidos.map((e) => e.id) };
+  state.chave[faseKey] = chave;
+  avancarChave(faseKey);
+  return chave;
+}
+
+function avancarChave(faseKey) {
+  const chave = state.chave[faseKey];
+  if (!chave) return;
+  const totalRodadas = FASES[faseKey].rounds;
+  for (let r = 0; r < totalRodadas; r++) {
+    const rodada = chave.rodadas[r];
+    if (!rodada || rodada.length === 0) break;
+    rodada.forEach((jogo) => {
+      if (jogo.vencedor) return;
+      if (jogo.a.ehJogador || jogo.b.ehJogador) return;
+      const resultado = simularBatalha(jogo.a.ovr, jogo.b.ovr);
+      jogo.vencedor = resultado.vencedor === "jogador" ? jogo.a : jogo.b;
+      jogo.placar = `${resultado.pWins}x${resultado.oWins}`;
+    });
+    const completa = rodada.every((j) => j.vencedor);
+    if (completa && r + 1 < totalRodadas && chave.rodadas[r + 1].length === 0) {
+      const vencedores = rodada.map((j) => j.vencedor);
+      const proxRodada = [];
+      for (let i = 0; i < vencedores.length; i += 2) {
+        proxRodada.push({ a: vencedores[i], b: vencedores[i + 1], vencedor: null, placar: null });
+      }
+      chave.rodadas[r + 1] = proxRodada;
+    } else if (!completa) {
+      break;
+    }
+  }
+}
+
+function obterAdversarioDaChave(faseKey, roundIndex) {
+  const chave = state.chave[faseKey];
+  if (!chave) return null;
+  const rodada = chave.rodadas[roundIndex - 1];
+  if (!rodada) return null;
+  const jogo = rodada.find((j) => j.a.ehJogador || j.b.ehJogador);
+  if (!jogo) return null;
+  return jogo.a.ehJogador ? jogo.b : jogo.a;
+}
+
+function favoritosDaChave(faseKey) {
+  const chave = state.chave[faseKey];
+  if (!chave) return [];
+  return chave.participantes
+    .map((p) => ({
+      nome: p.nome, estado: p.estado, ovr: p.ovr, ehJogador: !!p.ehJogador,
+      titulos: p.ehJogador ? p.titulosNacionais : ((HISTORICAL_MCS.find((m) => m.id === p.id) || {}).titulosNacionais || 0),
+    }))
+    .sort((a, b) => (b.titulos * 10 + b.ovr) - (a.titulos * 10 + a.ovr));
+}
+
+function sortearProximoAdversario() {
+  const b = state.battle;
+  if (b.fase === "seletiva-regional" || b.fase === "seletiva-estadual" || b.fase === "nacional") {
+    if (!state.chave[b.fase]) {
+      gerarChaveCompleta(b.fase);
+      state.faseFavoritos = b.fase;
+      state.view = "favoritos";
+      render();
+      return;
+    }
+    const op = obterAdversarioDaChave(b.fase, b.round);
+    state.usedNomes.add(op.id);
+    b.oponente = op;
+    b.resultado = null;
+    state.view = "batalha";
+    render();
+    return;
+  }
+  const op = sortearAdversario(b.fase, b.round, state.career.player.estado, state.usedNomes, state.usedEstadosNacional);
+  state.usedNomes.add(op.id);
+  if (b.fase === "nacional") state.usedEstadosNacional.add(op.estado);
+  b.oponente = op;
+  b.resultado = null;
+  state.view = "batalha";
+  render();
+}
+
+function continuarAposFavoritos() {
+  sortearProximoAdversario();
+}
+
+function irParaChaveamento() {
+  state.chaveVisualizando = state.battle.fase;
+  state.view = "chaveamento";
+  render();
+}
+
+function viewFavoritos() {
+  const faseKey = state.faseFavoritos;
+  const lista = favoritosDaChave(faseKey);
+  const linhas = lista.map((p, i) => `
+    <div class="year-row">
+      <span>${i + 1}º — ${p.ehJogador ? `<b style="color:var(--red)">${p.nome}</b>` : p.nome} (${p.estado})</span>
+      <b>${p.titulos > 0 ? "🏆 " : ""}OVR ${p.ovr}</b>
+    </div>
+  `).join("");
+  return `
+    <div class="card">
+      <h2>Lista de Favoritos — ${FASES[faseKey].label}</h2>
+      <p class="lead">Ranking dos 16 participantes por títulos no save e OVR.</p>
+    </div>
+    <div class="card dark">${linhas}</div>
+    <button class="btn" onclick="continuarAposFavoritos()">COMEÇAR A CHAVE</button>
+  `;
+}
+
+function viewChaveamento() {
+  const faseKey = state.chaveVisualizando;
+  const chave = state.chave[faseKey];
+  if (!chave) {
+    return `<div class="card"><p class="lead">Chave ainda não disponível.</p></div><button class="btn secondary" onclick="state.view='batalha'; render();">Voltar</button>`;
+  }
+  const totalRodadas = FASES[faseKey].rounds;
+  const blocos = [];
+  for (let r = 0; r < totalRodadas; r++) {
+    const rodada = chave.rodadas[r];
+    if (!rodada || rodada.length === 0) continue;
+    const nomeRodada = roundLabel(r + 1, totalRodadas);
+    const jogos = rodada.map((j) => {
+      const nomeA = j.a.ehJogador ? `<b style="color:var(--red)">${j.a.nome}</b>` : j.a.nome;
+      const nomeB = j.b.ehJogador ? `<b style="color:var(--red)">${j.b.nome}</b>` : j.b.nome;
+      const resultado = j.vencedor
+        ? `${j.vencedor === j.a ? j.a.nome : j.b.nome} venceu (${(j.placar || "").replace("x", " x ")})`
+        : "a decidir";
+      return `<div class="year-row"><span>${nomeA} (${j.a.estado}) vs ${nomeB} (${j.b.estado})</span><b>${resultado}</b></div>`;
+    }).join("");
+    blocos.push(`<div class="card dark"><h2>${nomeRodada}</h2>${jogos}</div>`);
+  }
+  return `
+    <div class="card"><h2>Chaveamento completo — ${FASES[faseKey].label}</h2></div>
+    ${blocos.join("")}
+    <button class="btn secondary" onclick="state.view='batalha'; render();">Voltar pra batalha</button>
+  `;
+}
+
+function renderChaveVisual(faseAtual, roundAtual) {
+  const ordemFases = ["seletiva-regional", "seletiva-estadual", "repescagem", "nacional"];
+  const indiceAtual = ordemFases.indexOf(faseAtual);
+  const passouPelaRepescagem = state.seasonBattles.some((bt) => bt.fase === "repescagem");
+  const blocos = ordemFases.map((fk, idx) => {
+    if (fk === "repescagem" && faseAtual !== "repescagem" && !passouPelaRepescagem) return "";
+    const fase = FASES[fk];
+    const ativo = fk === faseAtual;
+    const completa = idx < indiceAtual;
+    const pontos = Array.from({ length: fase.rounds }, (_, i) => {
+      const r = i + 1;
+      let cls = "pendente";
+      if (completa) cls = "feito";
+      else if (ativo && r < roundAtual) cls = "feito";
+      else if (ativo && r === roundAtual) cls = "atual";
+      return `<span class="chave-dot ${cls}"></span>`;
+    }).join("");
+    return `<div class="chave-fase ${ativo ? "ativa" : ""}"><div class="chave-fase-nome">${fase.label.replace("Seletiva ", "")}</div><div class="chave-pontos">${pontos}</div></div>`;
+  }).join("");
+  return `<div class="chave-visual">${blocos}</div>`;
+}
+
+function viewBatalha() {
+  const b = state.battle;
+  const player = state.career.player;
+  const op = b.oponente;
+  const stageLabel = stageLabelFor(b.fase, b.round);
+
+  const playerCardClass = b.resultado ? (b.resultado.vencedor === "jogador" ? "win" : "lose") : "you";
+  const opCardClass = b.resultado ? (b.resultado.vencedor === "adversario" ? "win" : "lose") : "";
+
+  const rivalHtml = b.rival ? `<p class="lead" style="text-align:center;color:var(--red);font-weight:700;">🔥 RIVALIDADE — vocês já se cruzaram antes</p>` : "";
+
+  let resultadoHtml = "";
+  if (b.resultado) {
+    const venceu = b.resultado.vencedor === "jogador";
+    const pips = b.resultado.rounds.map((r) => `<span class="${r === "V" ? "v" : "d"}">${r}</span>`).join("");
+    const revesHtml = b.revesAplicado ? `<p class="lead" style="text-align:center;font-size:0.78rem;color:var(--red);">Derrota feia pesou: ${ATTRS.find((a) => a.key === b.revesAplicado).label} caiu 2 pontos.</p>` : "";
+    resultadoHtml = `
+      <div class="card">
+        <div class="score-line ${venceu ? "win" : "lose"}">${b.resultado.pWins} x ${b.resultado.oWins}</div>
+        <div class="round-pips">${pips}</div>
+        <p class="lead" style="text-align:center;">${venceu ? "Vitória" : "Derrota"} contra ${op.nome}</p>
+        ${revesHtml}
+        <button class="btn" onclick="continuarAposBatalha()">CONTINUAR</button>
+      </div>
+    `;
+  } else {
+    resultadoHtml = `<button class="btn" onclick="executarBatalha()">SIMULAR BATALHA</button>`;
+  }
+
+  const botaoChaveamento = (b.fase === "seletiva-regional" || b.fase === "seletiva-estadual" || b.fase === "nacional")
+    ? `<button class="btn secondary" onclick="irParaChaveamento()">VER CHAVEAMENTO COMPLETO</button>` : "";
+
+  return `
+    ${renderChaveVisual(b.fase, b.round)}
+    <div class="stage-label">${stageLabel}</div>
+    ${botaoChaveamento}
+    ${rivalHtml}
+    ${renderMcCard(player, playerCardClass, true)}
+    <div class="versus">VERSUS</div>
+    ${renderMcCard(op, opCardClass, false)}
+    ${resultadoHtml}
+  `;
+}
+
+function renderMcCard(mc, cls, isPlayer) {
+  const nome = isPlayer ? (mc.vulgo || mc.nome) : mc.nome;
+  const meta = isPlayer ? [`${mc.idade} anos`, mc.genero, mc.estado].filter(Boolean).join(" · ") : `${mc.estado}${mc.historico ? " · histórico" : ""}`;
+  const atributos = isPlayer ? mc.atributos : mc.atributos;
+  const attrsHtml = ATTRS.map((a) => `
+    <div class="attr-row">
+      <div class="attr-label">${a.label}</div>
+      <div class="attr-bar-bg"><div class="attr-bar-fill" style="width:${atributos[a.key]}%"></div></div>
+      <div class="attr-num">${atributos[a.key]}</div>
+    </div>
+  `).join("");
+  return `
+    <div class="mc-card ${cls}">
+      <div class="mc-top">
+        <div>
+          <div class="mc-name">${nome}</div>
+          <div style="font-size:0.72rem;color:var(--ink-soft)">${meta}</div>
+        </div>
+        <div class="mc-ovr">${mc.ovr}</div>
+      </div>
+      ${attrsHtml}
+    </div>
+  `;
+}
+
+function executarBatalha() {
+  const b = state.battle;
+  const player = state.career.player;
+  const resultado = simularBatalha(player.ovr, b.oponente.ovr);
+  b.resultado = resultado;
+
+  if (b.fase === "seletiva-regional" || b.fase === "seletiva-estadual" || b.fase === "nacional") {
+    const chave = state.chave[b.fase];
+    const rodada = chave && chave.rodadas[b.round - 1];
+    const jogo = rodada && rodada.find((j) => j.a.ehJogador || j.b.ehJogador);
+    if (jogo) {
+      jogo.vencedor = resultado.vencedor === "jogador" ? chave.jogadorSlot : b.oponente;
+      jogo.placar = `${resultado.pWins}x${resultado.oWins}`;
+      avancarChave(b.fase);
+    }
+  }
+
+  const stats = state.career.stats;
+  if (resultado.vencedor === "jogador") {
+    if (resultado.oWins === 0) stats.vitorias2x0++; else stats.vitorias2x1++;
+  } else {
+    if (resultado.pWins === 0) stats.derrotas2x0++; else stats.derrotas2x1++;
+  }
+
+  // GOAT Chase — bônus e downgrade por batalha
+  const reinaEstadual = state.career.reinanteEstadual;
+  const reinaNacional = state.career.reinanteNacional;
+  const eraReinante =
+    (reinaEstadual && reinaEstadual.nome === b.oponente.nome && reinaEstadual.estado === b.oponente.estado) ||
+    (reinaNacional && reinaNacional.nome === b.oponente.nome && reinaNacional.estado === b.oponente.estado);
+  if (resultado.vencedor === "jogador") {
+    if (resultado.oWins === 0) stats.goatChasePontos += 2; // venceu por 2x0
+    if (eraReinante) {
+      stats.goatChasePontos += 2; // venceu o atual campeão nacional/estadual
+      if (resultado.oWins === 0) stats.goatChasePontos += 1; // ...e por 2x0
+    }
+  } else if (b.round === 1 && resultado.pWins === 0 && resultado.oWins === 2 && b.fase !== "repescagem") {
+    stats.goatChasePontos -= 2; // tomou 2x0 logo na primeira fase
+  }
+
+  // sequência de vitórias 2x0 (conquista "Imbatível")
+  if (resultado.vencedor === "jogador" && resultado.oWins === 0) {
+    state.career.sequencia2x0Atual++;
+    state.career.sequencia2x0Maxima = Math.max(state.career.sequencia2x0Maxima, state.career.sequencia2x0Atual);
+  } else {
+    state.career.sequencia2x0Atual = 0;
+  }
+
+  // confronto direto (histórico MC a MC)
+  const cd = state.career.confrontosDiretos;
+  const chaveCd = b.oponente.id;
+  if (!cd[chaveCd]) cd[chaveCd] = { nome: b.oponente.nome, estado: b.oponente.estado, vitorias: 0, derrotas: 0 };
+  if (resultado.vencedor === "jogador") cd[chaveCd].vitorias++; else cd[chaveCd].derrotas++;
+  const ehRival = cd[chaveCd].vitorias + cd[chaveCd].derrotas >= 3;
+  b.rival = ehRival;
+  if (ehRival && resultado.vencedor === "jogador") stats.goatChasePontos += 1; // bônus por vencer um rival
+
+  // lesão / fase ruim: derrota feia (2x0) na primeira fase tem chance de machucar um atributo
+  if (b.round === 1 && resultado.pWins === 0 && resultado.oWins === 2 && b.fase !== "repescagem" && Math.random() < 0.2) {
+    const chaveAtrib = pickRandom(ATTRS.map((a) => a.key));
+    if (player.atributos[chaveAtrib] > 40) {
+      player.atributos[chaveAtrib] -= 2;
+      recalcularOvrJogador();
+      state.career.ultimoReves = { atributo: chaveAtrib, ano: state.career.ano };
+      b.revesAplicado = chaveAtrib;
+    }
+  }
+
+  state.seasonBattles.push({
+    fase: b.fase, round: b.round, label: stageLabelFor(b.fase, b.round),
+    adversario: b.oponente.nome, adversarioEstado: b.oponente.estado,
+    placar: `${resultado.pWins}x${resultado.oWins}`,
+    vencedor: resultado.vencedor,
+  });
+
+  render();
+}
+
+function continuarAposBatalha() {
+  const b = state.battle;
+  const won = b.resultado.vencedor === "jogador";
+  const stats = state.career.stats;
+
+  if (b.fase === "nacional" && won) state.nacionalRoundsWon++;
+
+  // registrar títulos/vices nas transições certas
+  if (b.fase === "seletiva-regional" && b.round === FASES["seletiva-regional"].rounds && won) stats.titulosRegional++;
+  if (b.fase === "seletiva-estadual" && b.round === FASES["seletiva-estadual"].rounds) {
+    if (won) stats.titulosEstadual++;
+    else { stats.vicesEstadual++; stats.repescagensDisputadas++; }
+  }
+  if (b.fase === "repescagem" && b.round === FASES["repescagem"].rounds && won) stats.repescagensVencidas++;
+
+  const prox = nextStage(b.fase, b.round, won);
+
+  if (prox === "ELIMINADO") { finalizarTemporada("eliminado"); return; }
+  if (prox === "CAMPEAO") { finalizarTemporada("campeao"); return; }
+
+  b.fase = prox.fase;
+  b.round = prox.round;
+  sortearProximoAdversario();
+}
+
+// ---------------------------------------------------------
+// Fim de temporada
+// ---------------------------------------------------------
+
+function lerFinalDaChave(faseKey) {
+  const chave = state.chave[faseKey];
+  if (!chave) return null;
+  const totalRodadas = FASES[faseKey].rounds;
+  const rodadaFinal = chave.rodadas[totalRodadas - 1];
+  const final = rodadaFinal && rodadaFinal[0];
+  if (!final || !final.vencedor) return null;
+  const campeao = final.vencedor;
+  const vice = campeao === final.a ? final.b : final.a;
+  return {
+    campeao: { nome: campeao.nome, estado: campeao.estado, isPlayer: !!campeao.ehJogador },
+    vice: { nome: vice.nome, estado: vice.estado, isPlayer: !!vice.ehJogador },
+  };
+}
+
+function finalizarTemporada(desfecho) {
+  const b = state.battle;
+  const stats = state.career.stats;
+  const player = state.career.player;
+  let ganhoOvr = 0;
+  let melhorResultado = null;
+  let alcancouNacional = false;
+
+  if (desfecho === "campeao") {
+    stats.titulosNacional++;
+    ganhoOvr = calcularGanhoOvrNacional(0, false, true);
+    melhorResultado = "Campeão Nacional";
+    alcancouNacional = true;
+  } else if (b.fase === "nacional") {
+    alcancouNacional = true;
+    if (b.round === FASES.nacional.rounds) {
+      stats.vicesNacional++;
+      ganhoOvr = calcularGanhoOvrNacional(0, true, false);
+      melhorResultado = "Vice-campeão Nacional";
+    } else {
+      ganhoOvr = calcularGanhoOvrNacional(state.nacionalRoundsWon, false, false);
+      melhorResultado = "Eliminado — " + stageLabelFor("nacional", b.round);
+    }
+  } else if (b.fase === "repescagem") {
+    melhorResultado = "Não classificado (eliminado na repescagem)";
+  } else {
+    melhorResultado = "Eliminado — " + stageLabelFor(b.fase, b.round);
+  }
+
+  if (!stats.melhorResultadoNacional && alcancouNacional) stats.melhorResultadoNacional = melhorResultado;
+
+  const ovrInicialTemporada = player.ovr;
+  const ovrFinal = ovrInicialTemporada + ganhoOvr; // informativo — o ganho vira pontos de treino pro jogador investir
+  const registro = {
+    temporada: state.career.history.length + 1,
+    ano: state.career.ano,
+    idade: player.idade,
+    ovrInicial: ovrInicialTemporada,
+    ovrFinal,
+    ganhoOvr,
+    melhorResultado,
+    battles: state.seasonBattles,
+  };
+  const ultimaBatalha = state.seasonBattles[state.seasonBattles.length - 1];
+  registro.eliminadoPor = (desfecho !== "campeao" && ultimaBatalha && ultimaBatalha.vencedor === "adversario")
+    ? { nome: ultimaBatalha.adversario, estado: ultimaBatalha.adversarioEstado, placar: ultimaBatalha.placar, ovr: b.oponente.ovr, id: b.oponente.id }
+    : null;
+
+  state.career.history.push(registro);
+
+  // o Nacional daquele ano é sempre simulado, mesmo quando o jogador nem chega lá —
+  // campeão e vice nunca vêm do mesmo estado. Quando a chave completa do Nacional já
+  // foi gerada (o jogador chegou lá), usa o resultado real dela.
+  let campeaoInfo, viceInfo;
+  const finalNacionalChave = lerFinalDaChave("nacional");
+  if (finalNacionalChave) {
+    campeaoInfo = finalNacionalChave.campeao;
+    viceInfo = finalNacionalChave.vice;
+  } else if (desfecho === "campeao") {
+    campeaoInfo = { nome: player.vulgo, estado: player.estado, isPlayer: true };
+    viceInfo = ultimaBatalha ? { nome: ultimaBatalha.adversario, estado: ultimaBatalha.adversarioEstado, isPlayer: false } : null;
+  } else if (alcancouNacional && b.fase === "nacional" && b.round === FASES.nacional.rounds) {
+    // jogador perdeu a final: virou vice
+    viceInfo = { nome: player.vulgo, estado: player.estado, isPlayer: true };
+    campeaoInfo = registro.eliminadoPor ? { nome: registro.eliminadoPor.nome, estado: registro.eliminadoPor.estado, isPlayer: false } : null;
+  } else {
+    // jogador não decidiu o Nacional dessa temporada (não chegou lá, ou caiu antes da
+    // final): simula o RESTO da chave de verdade. Se ele caiu dentro do próprio Nacional,
+    // quem o eliminou já garantiu a vaga na próxima rodada — entra como candidato e só
+    // precisa vencer as rodadas que faltam pra ser campeão. Nunca repete MC nem estado
+    // já usados nessa temporada.
+    const estadosUsados = new Set(state.usedEstadosNacional);
+    const nomesUsados = new Set(state.usedNomes);
+    estadosUsados.add(player.estado);
+
+    function sortearRival() {
+      const pool = HISTORICAL_MCS.filter((m) => !estadosUsados.has(m.estado) && !nomesUsados.has(m.id) && m.id !== state.career.player.assumedId);
+      if (pool.length === 0) return null;
+      const escolhido = pickPonderado(pool, 0.7);
+      estadosUsados.add(escolhido.estado);
+      nomesUsados.add(escolhido.id);
+      return escolhido;
+    }
+
+    let candidato, rodadaAtual;
+    if (alcancouNacional && b.fase === "nacional" && registro.eliminadoPor && registro.eliminadoPor.ovr != null) {
+      candidato = { nome: registro.eliminadoPor.nome, estado: registro.eliminadoPor.estado, ovr: registro.eliminadoPor.ovr };
+      estadosUsados.add(candidato.estado);
+      rodadaAtual = b.round; // já vale a rodada em que venceu o jogador; falta o resto da chave
+    } else {
+      candidato = sortearRival();
+      rodadaAtual = 0; // ninguém decidido ainda: simula a chave inteira
+    }
+
+    let ultimoPerdedor = null;
+    if (candidato) {
+      for (let r = rodadaAtual + 1; r <= FASES.nacional.rounds; r++) {
+        const rival = sortearRival();
+        if (!rival) break;
+        const resultadoSim = simularBatalha(candidato.ovr, rival.ovr);
+        if (resultadoSim.vencedor === "jogador") {
+          ultimoPerdedor = rival;
+        } else {
+          ultimoPerdedor = candidato;
+          candidato = rival;
+        }
+      }
+    }
+
+    campeaoInfo = candidato ? { nome: candidato.nome, estado: candidato.estado, isPlayer: false } : null;
+    viceInfo = ultimoPerdedor ? { nome: ultimoPerdedor.nome, estado: ultimoPerdedor.estado, isPlayer: false } : null;
+  }
+  state.career.simulatedNationals[state.career.ano] = {
+    jogadorResultado: melhorResultado,
+    campeao: campeaoInfo,
+    vice: viceInfo,
+    historicoReal: HISTORICAL_NATIONALS[state.career.ano] || null,
+  };
+
+  // Estadual simulado da temporada: campeão e vice do estado que o jogador representa,
+  // mesmo quando ele não chega (ou não vence) a final do Estadual.
+  const totalEstadual = FASES["seletiva-estadual"].rounds;
+  const finalEstadualBatalha = state.seasonBattles.find((bt) => bt.fase === "seletiva-estadual" && bt.round === totalEstadual);
+  let campeaoEstadualInfo, viceEstadualInfo;
+  const finalEstadualChave = lerFinalDaChave("seletiva-estadual");
+  if (finalEstadualChave) {
+    campeaoEstadualInfo = finalEstadualChave.campeao;
+    viceEstadualInfo = finalEstadualChave.vice;
+  } else if (finalEstadualBatalha && finalEstadualBatalha.vencedor === "jogador") {
+    campeaoEstadualInfo = { nome: player.vulgo, estado: player.estado, isPlayer: true };
+    viceEstadualInfo = { nome: finalEstadualBatalha.adversario, estado: finalEstadualBatalha.adversarioEstado, isPlayer: false };
+  } else if (finalEstadualBatalha && finalEstadualBatalha.vencedor === "adversario") {
+    viceEstadualInfo = { nome: player.vulgo, estado: player.estado, isPlayer: true };
+    campeaoEstadualInfo = { nome: finalEstadualBatalha.adversario, estado: finalEstadualBatalha.adversarioEstado, isPlayer: false };
+  } else {
+    // jogador não chegou na final do Estadual (caiu na Seletiva Regional ou nas
+    // primeiras rodadas do próprio Estadual): simula o resto da chave estadual a
+    // partir de quem o eliminou dentro do Estadual (se foi o caso), sem repetir
+    // ninguém já enfrentado nessa temporada.
+    const nomesUsadosEstadual = new Set(state.usedNomes);
+    const estadoAlvo = player.estado;
+    function sortearRivalEstadual() {
+      const pool = HISTORICAL_MCS.filter((m) => m.estado === estadoAlvo && !nomesUsadosEstadual.has(m.id) && m.id !== player.assumedId);
+      if (pool.length === 0) return null;
+      const escolhido = pickPonderado(pool, 0.6);
+      nomesUsadosEstadual.add(escolhido.id);
+      return escolhido;
+    }
+    const derrotaEstadual = state.seasonBattles.find((bt) => bt.fase === "seletiva-estadual" && bt.vencedor === "adversario");
+    let candidatoEstadual, rodadaAtualEstadual;
+    if (derrotaEstadual) {
+      const mcReal = HISTORICAL_MCS.find((m) => m.nome === derrotaEstadual.adversario && m.estado === derrotaEstadual.adversarioEstado);
+      candidatoEstadual = mcReal ? { nome: mcReal.nome, estado: mcReal.estado, ovr: mcReal.ovr } : null;
+      if (mcReal) nomesUsadosEstadual.add(mcReal.id);
+      rodadaAtualEstadual = derrotaEstadual.round;
+    } else {
+      candidatoEstadual = sortearRivalEstadual();
+      rodadaAtualEstadual = 0;
+    }
+    let ultimoPerdedorEstadual = null;
+    if (candidatoEstadual) {
+      for (let r = rodadaAtualEstadual + 1; r <= totalEstadual; r++) {
+        const rival = sortearRivalEstadual();
+        if (!rival) break;
+        const resultadoSimEst = simularBatalha(candidatoEstadual.ovr, rival.ovr);
+        if (resultadoSimEst.vencedor === "jogador") {
+          ultimoPerdedorEstadual = rival;
+        } else {
+          ultimoPerdedorEstadual = candidatoEstadual;
+          candidatoEstadual = rival;
+        }
+      }
+    }
+    campeaoEstadualInfo = candidatoEstadual ? { nome: candidatoEstadual.nome, estado: candidatoEstadual.estado, isPlayer: false } : null;
+    viceEstadualInfo = ultimoPerdedorEstadual ? { nome: ultimoPerdedorEstadual.nome, estado: ultimoPerdedorEstadual.estado, isPlayer: false } : null;
+  }
+  state.career.simulatedEstaduais[state.career.ano] = {
+    estado: player.estado,
+    campeao: campeaoEstadualInfo,
+    vice: viceEstadualInfo,
+  };
+
+  // GOAT Chase — pontos base por fase (rodadas vencidas), Repescagem não pontua
+  const roundsRegional = state.seasonBattles.filter((bt) => bt.fase === "seletiva-regional" && bt.vencedor === "jogador").length;
+  const roundsEstadual = state.seasonBattles.filter((bt) => bt.fase === "seletiva-estadual" && bt.vencedor === "jogador").length;
+  const roundsNac = state.seasonBattles.filter((bt) => bt.fase === "nacional" && bt.vencedor === "jogador").length;
+  stats.goatChasePontos += GOAT_PONTOS_REGIONAL[Math.min(roundsRegional, GOAT_PONTOS_REGIONAL.length - 1)] || 0;
+  stats.goatChasePontos += GOAT_PONTOS_ESTADUAL[Math.min(roundsEstadual, GOAT_PONTOS_ESTADUAL.length - 1)] || 0;
+  stats.goatChasePontos += GOAT_PONTOS_NACIONAL[Math.min(roundsNac, GOAT_PONTOS_NACIONAL.length - 1)] || 0;
+
+  // pontos de treino ganhos na temporada (gasta manualmente no treinamento antes da próxima)
+  const pontosTreinoGanhos = roundsRegional + roundsEstadual + ganhoOvr;
+  player.pontosTreinoPendentes = (player.pontosTreinoPendentes || 0) + pontosTreinoGanhos;
+  registro.pontosTreino = pontosTreinoGanhos;
+
+  // atualiza quem é o atual campeão estadual/nacional pra próxima temporada
+  if (campeaoEstadualInfo) state.career.reinanteEstadual = { nome: campeaoEstadualInfo.nome, estado: campeaoEstadualInfo.estado };
+  if (campeaoInfo) state.career.reinanteNacional = { nome: campeaoInfo.nome, estado: campeaoInfo.estado };
+
+  state.ultimoDesfecho = desfecho;
+  salvarCarreiraAtual();
+  state.view = "fim-temporada";
+  render();
+}
+
+function viewFimTemporada() {
+  const reg = state.career.history[state.career.history.length - 1];
+  const battlesHtml = reg.battles.map((b) => `
+    <li>${b.label}: ${state.career.player.vulgo} ${b.placar.replace("x", " x ")} ${b.adversario} — ${b.vencedor === "jogador" ? "vitória" : "derrota"}</li>
+  `).join("");
+
+  let comparacaoHtml = "";
+  const sim = state.career.simulatedNationals[reg.ano];
+  if (sim && sim.historicoReal) {
+    comparacaoHtml = `
+      <div class="card dark">
+        <h2>Nacional ${reg.ano}</h2>
+        <div class="year-row"><span>Histórico real</span><b>não há registro em ${reg.ano}</b></div>
+        <p class="lead">Sua simulação não sobrescreve nenhum dado real — os campeões oficiais continuam intactos no Histórico Nacional.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="card">
+      <h2>Temporada ${reg.temporada} — ${reg.ano}</h2>
+      <table class="stats-table">
+        <tr><td>Vulgo</td><td>${state.career.player.vulgo}</td></tr>
+        <tr><td>Idade</td><td>${reg.idade} anos</td></tr>
+        <tr><td>OVR inicial</td><td>${reg.ovrInicial}</td></tr>
+        <tr><td>Ganho de OVR</td><td>+${reg.ganhoOvr}</td></tr>
+        <tr><td>OVR final</td><td>${reg.ovrFinal}</td></tr>
+        <tr><td>Resultado</td><td>${reg.melhorResultado}</td></tr>
+        <tr><td>Pontos de treino ganhos</td><td>+${reg.pontosTreino}</td></tr>
+      </table>
+      <p class="lead" style="font-size:0.78rem;margin-top:6px;">Esses pontos entram no treinamento antes da próxima temporada — você escolhe onde investir.</p>
+    </div>
+    ${comparacaoHtml}
+    <div class="card dark">
+      <h2>Batalhas da temporada</h2>
+      <ul class="plain">${battlesHtml}</ul>
+    </div>
+    <button class="btn" onclick="tentarDeNovo()">TENTAR DE NOVO (${state.career.player.idade + 1} anos)</button>
+    <button class="btn secondary" onclick="irParaQuadroCarreira()">VER QUADRO DA CARREIRA</button>
+    <button class="btn danger" onclick="confirmarAposentadoria()">APOSENTAR ${state.career.player.vulgo}</button>
+    <button class="btn secondary" onclick="confirmarNovaCarreiraMesmoSlot()">NOVA CARREIRA (mesmo slot)</button>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar ao menu</button>
+  `;
+}
+
+function confirmarAposentadoria() {
+  pedirConfirmacao(`Aposentar ${state.career.player.vulgo}? Isso encerra a carreira desse slot — dá pra continuar vendo o quadro de honra, mas não dá mais pra jogar novas temporadas com esse MC.`, () => {
+    state.career.aposentado = true;
+    simularGoatChase();
+    salvarCarreiraAtual();
+    state.view = "quadro-carreira";
+    render();
+  });
+}
+
+const EVENTOS_ALEATORIOS = [
+  { texto: "Você foi convidado pra gravar um clipe e ganhou visibilidade — Criatividade +1.", atributo: "criatividade", delta: 1 },
+  { texto: "Treta nas redes sociais atrapalhou seu foco nos treinos — um atributo caiu um pouco.", atributo: null, delta: -1 },
+  { texto: "Temporada tranquila, sem grandes acontecimentos fora dos palcos.", atributo: null, delta: 0 },
+  { texto: "Um freestyle seu viralizou — Flow +1.", atributo: "flow", delta: 1 },
+  { texto: "Uma rouquidão chata atrapalhou os treinos de dicção — Dicção -1.", atributo: "diccao", delta: -1 },
+  { texto: "Virou referência pros mais novos da cena — Punchline +1.", atributo: "punchline", delta: 1 },
+  { texto: "Temporada tranquila, sem grandes acontecimentos fora dos palcos.", atributo: null, delta: 0 },
+];
+
+function aplicarDeclinioPorIdade(player) {
+  if (player.idade <= 30) return null;
+  const chave = pickRandom(ATTRS.map((a) => a.key));
+  if (player.atributos[chave] <= 50) return null;
+  player.atributos[chave] -= 1;
+  recalcularOvrJogador();
+  return { atributo: chave, ano: state.career.ano };
+}
+
+function aplicarEventoAleatorio(player) {
+  if (Math.random() >= 0.3) return null; // 30% de chance de ter um evento na entressafra
+  const evento = pickRandom(EVENTOS_ALEATORIOS);
+  if (evento.delta !== 0) {
+    const chave = evento.atributo || pickRandom(ATTRS.map((a) => a.key));
+    const atual = player.atributos[chave];
+    const novo = Math.max(40, Math.min(99, atual + evento.delta));
+    player.atributos[chave] = novo;
+    recalcularOvrJogador();
+  }
+  return { texto: evento.texto, ano: state.career.ano };
+}
+
+function tentarDeNovo() {
+  state.career.player.idade += 1;
+  state.career.ano += 1;
+  state.career.ultimoDeclinio = aplicarDeclinioPorIdade(state.career.player);
+  state.career.ultimoEvento = aplicarEventoAleatorio(state.career.player);
+  salvarCarreiraAtual();
+  if (state.career.player.pontosTreinoPendentes > 0) {
+    iniciarTreinamento();
+  } else {
+    iniciarTemporada();
+  }
+}
+
+function iniciarTreinamento() {
+  state.treino = { pontosRestantes: state.career.player.pontosTreinoPendentes };
+  state.career.player.pontosTreinoPendentes = 0;
+  state.view = "treinamento";
+  render();
+}
+
+function recalcularOvrJogador() {
+  const p = state.career.player;
+  const chaves = ATTRS.map((a) => a.key);
+  p.ovr = Math.round(chaves.reduce((acc, k) => acc + p.atributos[k], 0) / chaves.length);
+}
+
+function escolherTreino(attrKey) {
+  const t = state.treino;
+  const p = state.career.player;
+  if (!t || t.pontosRestantes <= 0) return;
+  if (p.atributos[attrKey] >= 99) return;
+  p.atributos[attrKey] += 1;
+  t.pontosRestantes -= 1;
+  recalcularOvrJogador();
+  render();
+}
+
+function confirmarTreino() {
+  salvarCarreiraAtual();
+  iniciarTemporada();
+}
+
+function viewTreinamento() {
+  const p = state.career.player;
+  const t = state.treino;
+  const linhas = ATTRS.map((a) => {
+    const noTeto = p.atributos[a.key] >= 99;
+    const semPontos = t.pontosRestantes <= 0;
+    const desabilitado = noTeto || semPontos;
+    return `
+      <button class="option-card" style="width:100%;text-align:left;margin-bottom:6px;${desabilitado ? "opacity:0.4;" : ""}" ${desabilitado ? "disabled" : ""} onclick="escolherTreino('${a.key}')">
+        <span class="opt-val">${p.atributos[a.key]}${noTeto ? " (teto)" : ""}</span>
+        <span class="opt-name">${a.label}</span>
+      </button>
+    `;
+  }).join("");
+  const c = state.career;
+  const eventoHtml = (c.ultimoEvento && c.ultimoEvento.ano === c.ano)
+    ? `<div class="card dark"><p class="lead">📰 ${c.ultimoEvento.texto}</p></div>` : "";
+  const declinioHtml = (c.ultimoDeclinio && c.ultimoDeclinio.ano === c.ano)
+    ? `<div class="card dark"><p class="lead">⏳ A idade cobrou o preço: ${ATTRS.find((a) => a.key === c.ultimoDeclinio.atributo).label} caiu 1 ponto.</p></div>` : "";
+  return `
+    <div class="stage-label">Treinamento — ${p.vulgo}, ${p.idade} anos</div>
+    ${eventoHtml}
+    ${declinioHtml}
+    <div class="card dark">
+      <h2>Pontos de treino: ${t.pontosRestantes}</h2>
+      <p class="lead">Escolha em qual atributo investir cada ponto antes da próxima temporada.</p>
+    </div>
+    <div class="card">${linhas}</div>
+    <button class="btn" onclick="confirmarTreino()">${t.pontosRestantes > 0 ? "PULAR O RESTANTE E " : ""}COMEÇAR TEMPORADA</button>
+  `;
+}
+
+function confirmarNovaCarreiraMesmoSlot() {
+  pedirConfirmacao("Isso vai apagar a carreira atual desse slot e começar do zero. Continuar?", () => {
+    state.career = novaCareiraObj(state.slotKey);
+    state.view = "ficha";
+    render();
+  });
+}
+
+// ---------------------------------------------------------
+// Hub da carreira (ao continuar uma carreira salva)
+// ---------------------------------------------------------
+
+function viewHubCarreira() {
+  const c = state.career;
+  const ultimaTemporada = c.history[c.history.length - 1];
+  const botoes = c.aposentado
+    ? `<button class="btn" onclick="irParaQuadroCarreira()">VER QUADRO DE HONRA</button>`
+    : `<button class="btn" onclick="tentarDeNovo()">JOGAR PRÓXIMA TEMPORADA</button>
+       <button class="btn secondary" onclick="irParaQuadroCarreira()">VER QUADRO DA CARREIRA</button>
+       <button class="btn danger" onclick="confirmarAposentadoria()">APOSENTAR ${c.player.vulgo}</button>`;
+  return `
+    <div class="card">
+      <h2>${c.player.vulgo} <span style="font-size:0.8rem;color:var(--ink-soft)">(${c.player.nome})</span>${c.aposentado ? ` <span class="badge">APOSENTADO</span>` : ""}</h2>
+      <table class="stats-table">
+        <tr><td>Estado</td><td>${c.player.estado}</td></tr>
+        <tr><td>Idade</td><td>${c.player.idade} anos</td></tr>
+        <tr><td>OVR atual</td><td>${c.player.ovr}</td></tr>
+        <tr><td>Temporadas jogadas</td><td>${c.history.length}</td></tr>
+        ${ultimaTemporada ? `<tr><td>Último resultado</td><td>${ultimaTemporada.melhorResultado}</td></tr>` : ""}
+      </table>
+    </div>
+    ${botoes}
+    <button class="btn secondary" onclick="voltarMenu()">Voltar ao menu</button>
+  `;
+}
+
+// ---------------------------------------------------------
+// Quadro de carreira
+// ---------------------------------------------------------
+
+function irParaQuadroCarreira() { state.view = "quadro-carreira"; render(); }
+
+function renderRankingGoat(ranking, titulo, limite) {
+  const posicao = ranking.findIndex((r) => r.isPlayer) + 1;
+  const top = ranking.slice(0, limite);
+  const linhas = top.map((r, i) => `
+    <div class="year-row">
+      <span>${i + 1}º — ${r.isPlayer ? `<b style="color:var(--red)">${r.nome}</b>` : r.nome} (${r.estado})</span>
+      <b>${r.pontos} pts</b>
+    </div>
+  `).join("");
+  const foraDoTop = posicao > limite ? `<p class="lead" style="font-size:0.78rem;">Sua posição: ${posicao}º de ${ranking.length}.</p>` : "";
+  return `<h2>${titulo}</h2>${linhas}${foraDoTop}`;
+}
+
+function calcularConquistas(c) {
+  const conquistas = [];
+  if (c.sequencia2x0Maxima >= 5) conquistas.push({ emoji: "🔥", nome: "Imbatível", descricao: `${c.sequencia2x0Maxima} vitórias por 2x0 seguidas` });
+  const campeaoPrecoce = c.history.find((h) => h.melhorResultado === "Campeão Nacional" && h.idade < 20);
+  if (campeaoPrecoce) conquistas.push({ emoji: "⭐", nome: "Fenômeno Precoce", descricao: `Campeão Nacional aos ${campeaoPrecoce.idade} anos` });
+  if (c.stats.titulosNacional >= 3) conquistas.push({ emoji: "👑", nome: "Lenda Viva", descricao: `${c.stats.titulosNacional} títulos nacionais` });
+  if (c.stats.titulosNacional >= 1) conquistas.push({ emoji: "🏆", nome: "Campeão do Brasil", descricao: "Levantou a taça do Nacional" });
+  if (c.history.length >= 10) conquistas.push({ emoji: "🎖️", nome: "Carreira Longa", descricao: `${c.history.length} temporadas disputadas` });
+  const rivaisDerrotados = Object.values(c.confrontosDiretos || {}).filter((r) => r.vitorias + r.derrotas >= 3 && r.vitorias > r.derrotas).length;
+  if (rivaisDerrotados >= 1) conquistas.push({ emoji: "⚔️", nome: "Domou um Rival", descricao: `Saldo positivo contra ${rivaisDerrotados} rival(is)` });
+  return conquistas;
+}
+
+function viewQuadroCarreira() {
+  const c = state.career;
+  const s = c.stats;
+  const p = c.player;
+  const idadeInicial = c.history.length > 0 ? c.history[0].idade : p.idade;
+  const ovrInicial = c.history.length > 0 ? c.history[0].ovrInicial : p.ovr;
+  const ovrMaximo = c.history.length > 0 ? Math.max(...c.history.map((h) => h.ovrFinal)) : p.ovr;
+
+  const historicoHtml = c.history.map((h) => `
+    <div class="year-row">
+      <span>Temporada ${h.temporada} (${h.ano}, ${h.idade} anos)</span>
+      <b>${h.melhorResultado}</b>
+    </div>
+    ${h.eliminadoPor ? `<p class="lead" style="margin:-2px 0 6px;font-size:0.78rem;">Eliminado por <b>${h.eliminadoPor.nome}</b> (${h.eliminadoPor.estado}) — ${h.eliminadoPor.placar.replace("x", " x ")}</p>` : ""}
+  `).join("");
+
+  const anosNacional = Object.keys(c.simulatedNationals).sort();
+  const nacionalSimuladoHtml = anosNacional.map((ano) => {
+    const sim = c.simulatedNationals[ano];
+    const reg = c.history.find((h) => String(h.ano) === String(ano));
+    const nomeMc = (info) => info ? `${info.isPlayer ? `<b style="color:var(--red)">${info.nome}</b>` : info.nome} (${info.estado})` : "—";
+
+    let extra = "";
+    if (sim.jogadorResultado === "Campeão Nacional") {
+      const final = reg && reg.battles.length > 0 ? reg.battles[reg.battles.length - 1] : null;
+      extra = final ? `<p class="lead" style="margin:-2px 0 6px;font-size:0.78rem;">Venceu a final contra ${final.adversario} (${final.adversarioEstado}), ${final.placar.replace("x", " x ")}</p>` : "";
+    } else if (reg && reg.eliminadoPor) {
+      extra = `<p class="lead" style="margin:-2px 0 6px;font-size:0.78rem;">${p.vulgo} eliminado por ${reg.eliminadoPor.nome} (${reg.eliminadoPor.estado}), ${reg.eliminadoPor.placar.replace("x", " x ")}</p>`;
+    }
+
+    return `
+      <div class="year-row"><span>${ano}</span><b>🏆 ${nomeMc(sim.campeao)}</b></div>
+      <div class="year-row"><span></span><span>🥈 ${nomeMc(sim.vice)}</span></div>
+      ${extra}
+    `;
+  }).join("");
+
+  const nomeMcEstadual = (info) => info ? `${info.isPlayer ? `<b style="color:var(--red)">${info.nome}</b>` : info.nome} (${info.estado})` : "—";
+  const anosEstadual = Object.keys(c.simulatedEstaduais).sort();
+  const estadualSimuladoHtml = anosEstadual.map((ano) => {
+    const sim = c.simulatedEstaduais[ano];
+    return `
+      <div class="year-row"><span>${ano} — ${sim.estado}</span><b>🏆 ${nomeMcEstadual(sim.campeao)}</b></div>
+      <div class="year-row"><span></span><span>🥈 ${nomeMcEstadual(sim.vice)}</span></div>
+    `;
+  }).join("");
+
+  const tituloQuadro = c.aposentado ? "🏅 Quadro de Honra" : "Quadro de carreira";
+  const subtituloAposentado = c.aposentado
+    ? `<p class="lead" style="color:var(--red);font-weight:700;">Carreira encerrada — ${p.vulgo} está aposentado.</p>`
+    : "";
+
+  return `
+    <div class="card">
+      <h2>${tituloQuadro} — ${p.vulgo}</h2>
+      ${subtituloAposentado}
+      <table class="stats-table">
+        <tr><td>Nome</td><td>${p.nome}</td></tr>
+        <tr><td>Estado</td><td>${p.estado}</td></tr>
+        <tr><td>Idade inicial → atual</td><td>${idadeInicial} → ${p.idade}</td></tr>
+        <tr><td>OVR inicial → atual</td><td>${ovrInicial} → ${p.ovr}</td></tr>
+        <tr><td>OVR máximo da carreira</td><td>${ovrMaximo}</td></tr>
+        <tr><td>Temporadas disputadas</td><td>${c.history.length}</td></tr>
+      </table>
+    </div>
+    <div class="card dark">
+      <h2>Resultados de batalha</h2>
+      <table class="stats-table">
+        <tr><td>Vitórias 2x0</td><td>${s.vitorias2x0}</td></tr>
+        <tr><td>Derrotas 2x0</td><td>${s.derrotas2x0}</td></tr>
+        <tr><td>Vitórias 2x1</td><td>${s.vitorias2x1}</td></tr>
+        <tr><td>Derrotas 2x1</td><td>${s.derrotas2x1}</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Títulos</h2>
+      <table class="stats-table">
+        <tr><td>Campeão Seletiva Regional</td><td>${s.titulosRegional}</td></tr>
+        <tr><td>Campeão Estadual</td><td>${s.titulosEstadual}</td></tr>
+        <tr><td>Vice Estadual</td><td>${s.vicesEstadual}</td></tr>
+        <tr><td>Repescagens disputadas / vencidas</td><td>${s.repescagensDisputadas} / ${s.repescagensVencidas}</td></tr>
+        <tr><td>Campeão Nacional</td><td>${s.titulosNacional}</td></tr>
+        <tr><td>Vice Nacional</td><td>${s.vicesNacional}</td></tr>
+        <tr><td>Melhor resultado (Nacional)</td><td>${s.melhorResultadoNacional || "—"}</td></tr>
+      </table>
+    </div>
+    <div class="card" style="border:2px solid var(--yellow);">
+      <h2>🏅 Conquistas</h2>
+      ${(() => {
+        const conquistas = calcularConquistas(c);
+        if (conquistas.length === 0) return "<p class='lead'>Nenhuma conquista desbloqueada ainda.</p>";
+        return conquistas.map((cq) => `<p class="lead">${cq.emoji} <b>${cq.nome}</b> — ${cq.descricao}</p>`).join("");
+      })()}
+    </div>
+    <div class="card dark">
+      <h2>Confrontos diretos</h2>
+      ${(() => {
+        const lista = Object.values(c.confrontosDiretos || {}).sort((a, b) => (b.vitorias + b.derrotas) - (a.vitorias + a.derrotas)).slice(0, 10);
+        if (lista.length === 0) return "<p class='lead'>Nenhum confronto registrado ainda.</p>";
+        return lista.map((r) => {
+          const total = r.vitorias + r.derrotas;
+          const rival = total >= 3 ? " 🔥" : "";
+          return `<div class="year-row"><span>${r.nome} (${r.estado})${rival}</span><b>${r.vitorias}V ${r.derrotas}D</b></div>`;
+        }).join("");
+      })()}
+    </div>
+    <div class="card dark">
+      <h2>Estadual simulado da carreira</h2>
+      ${estadualSimuladoHtml || "<p class='lead'>Nenhuma temporada concluída ainda.</p>"}
+      <p class="disclaimer">Campeão e vice do Estadual do seu estado, simulados pra toda temporada, mesmo quando você não chega na final.</p>
+    </div>
+    <div class="card dark">
+      <h2>Nacional simulado da carreira</h2>
+      ${nacionalSimuladoHtml || "<p class='lead'>Nenhuma temporada concluída ainda.</p>"}
+      <p class="disclaimer">O campeão/vice de cada ano é simulado pra toda temporada, mesmo quando você não chega no Nacional — nunca do mesmo estado entre os dois, e nunca substitui os campeões reais do Histórico Nacional.</p>
+    </div>
+    ${c.aposentado && c.goatChase ? `
+    <div class="card" style="border:2px solid var(--yellow);">
+      <p class="lead"><b>🐐 GOAT Chase — pontuação de ${c.player.vulgo}: ${s.goatChasePontos} pts</b> (${c.goatChase.temporadasConsideradas} temporada(s) simuladas pra cada rival)</p>
+    </div>
+    <div class="card dark">
+      ${renderRankingGoat(c.goatChase.rankingEstado, `GOAT Chase — ${c.player.estado}`, 10)}
+    </div>
+    <div class="card dark">
+      ${renderRankingGoat(c.goatChase.rankingBrasil, "GOAT Chase — Brasil", 15)}
+    </div>
+    ` : ""}
+    <div class="card">
+      <h2>Histórico de temporadas</h2>
+      ${historicoHtml || "<p class='lead'>Nenhuma temporada concluída ainda.</p>"}
+    </div>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar ao menu</button>
+  `;
+}
+
+// ---------------------------------------------------------
+// Histórico Nacional (dados reais) e Banco de MCs
+// ---------------------------------------------------------
+
+function renderListaMcsPorEstado(excluirId, onClickFnName) {
+  const porEstado = {};
+  HISTORICAL_MCS.forEach((m) => { if (m.id !== excluirId) (porEstado[m.estado] = porEstado[m.estado] || []).push(m); });
+  const estados = Object.keys(porEstado).sort();
+  return estados.map((uf) => {
+    const linhas = porEstado[uf]
+      .slice()
+      .sort((a, b) => b.ovr - a.ovr)
+      .map((m) => `
+        <div class="option-card" onclick="${onClickFnName}('${m.id}')">
+          <span class="opt-val">OVR ${m.ovr}</span>
+          <span class="opt-name">${m.nome}</span>
+        </div>
+      `).join("");
+    return `<div class="card dark"><h2>${uf}</h2><div class="grid">${linhas}</div></div>`;
+  }).join("");
+}
+
+// ---------------------------------------------------------
+// Desafio Lendário — batalha avulsa entre dois MCs do banco, sem afetar nenhuma carreira
+// ---------------------------------------------------------
+
+function irParaDesafio() {
+  state.desafio = null;
+  state.view = "desafio-escolher-jogador";
+  render();
+}
+
+function viewDesafioEscolherJogador() {
+  return `
+    <div class="card"><p class="lead">Desafio Lendário: escolha quem você vai controlar (não afeta nenhuma carreira, só pra testar matchups).</p></div>
+    ${renderListaMcsPorEstado(null, "escolherDesafioJogador")}
+    <button class="btn secondary" onclick="voltarMenu()">Cancelar</button>
+  `;
+}
+
+function escolherDesafioJogador(id) {
+  const mc = HISTORICAL_MCS.find((m) => m.id === id);
+  if (!mc) return;
+  state.desafio = { jogador: opcaoComoOponente(mc), rival: null, resultado: null };
+  state.view = "desafio-escolher-rival";
+  render();
+}
+
+function viewDesafioEscolherRival() {
+  return `
+    <div class="card"><p class="lead">Agora escolha o adversário de ${state.desafio.jogador.nome}.</p></div>
+    ${renderListaMcsPorEstado(state.desafio.jogador.id, "escolherDesafioRival")}
+    <button class="btn secondary" onclick="irParaDesafio()">Trocar meu MC</button>
+  `;
+}
+
+function escolherDesafioRival(id) {
+  const mc = HISTORICAL_MCS.find((m) => m.id === id);
+  if (!mc) return;
+  state.desafio.rival = opcaoComoOponente(mc);
+  state.desafio.resultado = null;
+  state.view = "desafio-batalha";
+  render();
+}
+
+function executarDesafioBatalha() {
+  const d = state.desafio;
+  d.resultado = simularBatalha(d.jogador.ovr, d.rival.ovr);
+  render();
+}
+
+function viewDesafioBatalha() {
+  const d = state.desafio;
+  const jogadorCls = d.resultado ? (d.resultado.vencedor === "jogador" ? "win" : "lose") : "you";
+  const rivalCls = d.resultado ? (d.resultado.vencedor === "adversario" ? "win" : "lose") : "";
+  let resultadoHtml;
+  if (d.resultado) {
+    const venceu = d.resultado.vencedor === "jogador";
+    const pips = d.resultado.rounds.map((r) => `<span class="${r === "V" ? "v" : "d"}">${r}</span>`).join("");
+    resultadoHtml = `
+      <div class="card">
+        <div class="score-line ${venceu ? "win" : "lose"}">${d.resultado.pWins} x ${d.resultado.oWins}</div>
+        <div class="round-pips">${pips}</div>
+        <p class="lead" style="text-align:center;">${d.jogador.nome} ${venceu ? "venceu" : "perdeu para"} ${d.rival.nome}</p>
+      </div>
+      <button class="btn" onclick="executarDesafioBatalha()">SIMULAR DE NOVO</button>
+      <button class="btn secondary" onclick="irParaDesafio()">ESCOLHER OUTRO MC</button>
+    `;
+  } else {
+    resultadoHtml = `<button class="btn" onclick="executarDesafioBatalha()">SIMULAR BATALHA</button>`;
+  }
+  return `
+    <div class="stage-label">Desafio Lendário</div>
+    ${renderMcCard(d.jogador, jogadorCls, false)}
+    <div class="versus">VERSUS</div>
+    ${renderMcCard(d.rival, rivalCls, false)}
+    ${resultadoHtml}
+    <button class="btn secondary" onclick="voltarMenu()">Voltar ao menu</button>
+  `;
+}
+
+// ---------------------------------------------------------
+// Modo 2 Jogadores — cada um escolhe um MC e batalham entre si
+// ---------------------------------------------------------
+
+const TURNOS_DRAFT = [
+  { time: 1, qtd: 1 }, { time: 2, qtd: 2 }, { time: 1, qtd: 2 }, { time: 2, qtd: 2 },
+  { time: 1, qtd: 2 }, { time: 2, qtd: 2 }, { time: 1, qtd: 2 }, { time: 2, qtd: 2 },
+  { time: 1, qtd: 1 },
+];
+
+function irParaDuelo() {
+  state.duelo = null;
+  state.view = "duelo-nomes-times";
+  render();
+}
+
+function viewDueloNomesTimes() {
+  return `
+    <div class="card">
+      <h2>Modo 2 Jogadores — Draft</h2>
+      <p class="lead">Cada time vai sortear levas de 8 MCs e escolher quem entra no time, até montar 8 cada.</p>
+      <label class="field-label">Nome do Time 1</label>
+      <input id="f-time-a" placeholder="Ex: Os Invictos" />
+      <label class="field-label">Nome do Time 2</label>
+      <input id="f-time-b" placeholder="Ex: Batalha Fatal" />
+      <div id="f-erro-times" style="color:var(--red);font-size:0.8rem;margin-top:4px;"></div>
+    </div>
+    <button class="btn" onclick="confirmarNomesTimes()">COMEÇAR DRAFT</button>
+    <button class="btn secondary" onclick="voltarMenu()">Cancelar</button>
+  `;
+}
+
+function confirmarNomesTimes() {
+  const nomeA = document.getElementById("f-time-a").value.trim();
+  const nomeB = document.getElementById("f-time-b").value.trim();
+  if (!nomeA || !nomeB) {
+    document.getElementById("f-erro-times").textContent = "Dá um nome pros dois times.";
+    return;
+  }
+  state.duelo = {
+    nomeTimeA: nomeA, nomeTimeB: nomeB,
+    timeA: [], timeB: [],
+    turnoAtual: 0, escolhidosNesseTurno: 0,
+    poolFixo: [], idsDraftados: [],
+    formato: null, resultado: null,
+  };
+  sortearPoolDraft();
+  state.view = "duelo-draft";
+  render();
+}
+
+// Sorteia os 16 MCs da partida UMA vez só — essa lista fica fixa o jogo inteiro,
+// os dois times vão escolhendo dela até esgotar (8 picks cada).
+function sortearPoolDraft() {
+  const d = state.duelo;
+  const poolCopia = [...HISTORICAL_MCS];
+  const lote = [];
+  for (let i = 0; i < 16 && poolCopia.length > 0; i++) {
+    const idx = Math.floor(Math.random() * poolCopia.length);
+    lote.push(poolCopia.splice(idx, 1)[0]);
+  }
+  d.poolFixo = lote;
+}
+
+function opcoesRestantesDraft() {
+  const d = state.duelo;
+  const usados = new Set(d.idsDraftados);
+  return d.poolFixo.filter((m) => !usados.has(m.id));
+}
+
+function viewDueloDraft() {
+  const d = state.duelo;
+  const turno = TURNOS_DRAFT[d.turnoAtual];
+  const nomeTime = turno.time === 1 ? d.nomeTimeA : d.nomeTimeB;
+  const faltam = turno.qtd - d.escolhidosNesseTurno;
+  const opcoes = opcoesRestantesDraft().map((m) => `
+    <div class="option-card" onclick="escolherNoDraft('${m.id}')">
+      <span class="opt-val">OVR ${m.ovr}</span>
+      <span class="opt-name">${m.nome}</span><br/>
+      <span style="font-size:0.68rem;color:var(--paper-dim)">${m.estado}</span>
+    </div>
+  `).join("");
+  return `
+    <div class="stage-label">Draft — Turno ${d.turnoAtual + 1}/${TURNOS_DRAFT.length}</div>
+    <div class="card dark">
+      <h2>Vez de: ${nomeTime}</h2>
+      <p class="lead">Escolha ${faltam} MC${faltam > 1 ? "s" : ""} da lista (fixa, os 16 são sempre os mesmos na partida).</p>
+    </div>
+    <div class="grid">${opcoes}</div>
+    <div class="card">
+      <p class="lead" style="font-size:0.8rem;">${d.nomeTimeA}: ${d.timeA.length}/8 — ${d.nomeTimeB}: ${d.timeB.length}/8</p>
+    </div>
+  `;
+}
+
+function escolherNoDraft(id) {
+  const d = state.duelo;
+  const turno = TURNOS_DRAFT[d.turnoAtual];
+  const mc = d.poolFixo.find((m) => m.id === id);
+  if (!mc || d.idsDraftados.includes(id)) return;
+  const wrapped = opcaoComoOponente(mc);
+  if (turno.time === 1) d.timeA.push(wrapped); else d.timeB.push(wrapped);
+  d.idsDraftados.push(mc.id);
+  d.escolhidosNesseTurno++;
+
+  if (d.escolhidosNesseTurno >= turno.qtd) {
+    d.turnoAtual++;
+    d.escolhidosNesseTurno = 0;
+    if (d.turnoAtual >= TURNOS_DRAFT.length) {
+      state.view = "duelo-formato";
+      render();
+      return;
+    }
+  }
+  render();
+}
+
+function viewDueloFormato() {
+  const d = state.duelo;
+  return `
+    <div class="card">
+      <h2>Draft completo!</h2>
+      <p class="lead"><b>${d.nomeTimeA}</b>: ${d.timeA.map((m) => m.nome).join(", ")}</p>
+      <p class="lead"><b>${d.nomeTimeB}</b>: ${d.timeB.map((m) => m.nome).join(", ")}</p>
+    </div>
+    <div class="card dark">
+      <h2>Escolha o formato da batalha</h2>
+      <p class="lead">Até o último homem: os times mandam um de cada vez — quem perde sai, e o técnico escolhe o próximo, até acabar um lado. Normal: cada rodada os dois times escolhem quem entra, 8 rodadas, ganha quem tiver mais vitórias.</p>
+    </div>
+    <button class="btn" onclick="rodarDuelo('ultimo-homem')">ATÉ O ÚLTIMO HOMEM</button>
+    <button class="btn secondary" onclick="rodarDuelo('normal')">NORMAL (1 a 1)</button>
+  `;
+}
+
+function registrarDesempenho(desempenho, vencedorId, vencedorNome, dominante) {
+  if (!desempenho[vencedorId]) desempenho[vencedorId] = { nome: vencedorNome, vitorias: 0, dominantes: 0 };
+  desempenho[vencedorId].vitorias++;
+  if (dominante) desempenho[vencedorId].dominantes++;
+}
+
+function calcularMvp(desempenho) {
+  const entradas = Object.values(desempenho);
+  if (entradas.length === 0) return null;
+  entradas.sort((a, b) => (b.vitorias * 10 + b.dominantes) - (a.vitorias * 10 + a.dominantes));
+  return entradas[0];
+}
+
+function rodarDuelo(formato) {
+  const d = state.duelo;
+  d.formato = formato;
+  d.restantesA = [...d.timeA];
+  d.restantesB = [...d.timeB];
+  d.atualA = null;
+  d.atualB = null;
+  d.log = [];
+  d.desempenho = {};
+  d.vitoriasA = 0;
+  d.vitoriasB = 0;
+  d.turnoNormal = 0;
+  d.resultadoBatalhaAtual = null;
+  d.resultado = null;
+  state.view = "duelo-batalha-interativa";
+  render();
+}
+
+function escolherLutadorA(id) {
+  const d = state.duelo;
+  const idx = d.restantesA.findIndex((m) => m.id === id);
+  if (idx === -1) return;
+  d.atualA = d.restantesA.splice(idx, 1)[0];
+  render();
+}
+
+function escolherLutadorB(id) {
+  const d = state.duelo;
+  const idx = d.restantesB.findIndex((m) => m.id === id);
+  if (idx === -1) return;
+  d.atualB = d.restantesB.splice(idx, 1)[0];
+  render();
+}
+
+function executarBatalhaDuelo() {
+  const d = state.duelo;
+  const r = simularBatalha(d.atualA.ovr, d.atualB.ovr);
+  const venceuA = r.vencedor === "jogador";
+  const dominante = r.pWins === 0 || r.oWins === 0;
+  const vencedorNome = venceuA ? d.atualA.nome : d.atualB.nome;
+  registrarDesempenho(d.desempenho, venceuA ? d.atualA.id : d.atualB.id, vencedorNome, dominante);
+  if (venceuA) d.vitoriasA++; else d.vitoriasB++;
+  d.log.push({ a: d.atualA.nome, b: d.atualB.nome, placar: `${r.pWins}x${r.oWins}`, vencedor: vencedorNome });
+  d.resultadoBatalhaAtual = { venceuA, placar: `${r.pWins}x${r.oWins}` };
+  render();
+}
+
+function continuarDuelo() {
+  const d = state.duelo;
+  d.resultadoBatalhaAtual = null;
+  if (d.formato === "ultimo-homem") {
+    if (d.log[d.log.length - 1].vencedor === d.atualA.nome) {
+      d.atualB = null; // perdeu, sai; o técnico escolhe o próximo
+    } else {
+      d.atualA = null;
+    }
+    if (!d.atualA && d.restantesA.length === 0) { finalizarDuelo("B"); return; }
+    if (!d.atualB && d.restantesB.length === 0) { finalizarDuelo("A"); return; }
+  } else {
+    d.atualA = null;
+    d.atualB = null;
+    d.turnoNormal++;
+    if (d.turnoNormal >= 8) { finalizarDuelo(null); return; }
+  }
+  render();
+}
+
+function finalizarDuelo(timeVencedorForcado) {
+  const d = state.duelo;
+  const timeVencedor = timeVencedorForcado || (d.vitoriasA > d.vitoriasB ? "A" : d.vitoriasB > d.vitoriasA ? "B" : "empate");
+  d.resultado = { log: d.log, timeVencedor, mvp: calcularMvp(d.desempenho), vitoriasA: d.vitoriasA, vitoriasB: d.vitoriasB };
+  state.view = "duelo-resultado";
+  render();
+}
+
+function viewDueloBatalhaInterativa() {
+  const d = state.duelo;
+
+  if (d.resultadoBatalhaAtual) {
+    const venceuA = d.resultadoBatalhaAtual.venceuA;
+    return `
+      <div class="stage-label">${d.formato === "ultimo-homem" ? "Até o último homem" : "Normal"}</div>
+      ${renderMcCard(d.atualA, venceuA ? "win" : "lose", false)}
+      <div class="versus">VERSUS</div>
+      ${renderMcCard(d.atualB, venceuA ? "lose" : "win", false)}
+      <div class="card">
+        <div class="score-line ${venceuA ? "win" : "lose"}">${d.resultadoBatalhaAtual.placar}</div>
+        <p class="lead" style="text-align:center;">${venceuA ? d.atualA.nome : d.atualB.nome} venceu</p>
+        <button class="btn" onclick="continuarDuelo()">CONTINUAR</button>
+      </div>
+    `;
+  }
+
+  if (!d.atualA) {
+    if (d.restantesA.length === 0) { finalizarDuelo("B"); return ""; }
+    const opcoes = d.restantesA.map((m) => `<div class="option-card" onclick="escolherLutadorA('${m.id}')"><span class="opt-val">OVR ${m.ovr}</span><span class="opt-name">${m.nome}</span></div>`).join("");
+    return `
+      <div class="stage-label">${d.nomeTimeA}: escolha quem entra</div>
+      <div class="grid">${opcoes}</div>
+    `;
+  }
+  if (!d.atualB) {
+    if (d.restantesB.length === 0) { finalizarDuelo("A"); return ""; }
+    const opcoes = d.restantesB.map((m) => `<div class="option-card" onclick="escolherLutadorB('${m.id}')"><span class="opt-val">OVR ${m.ovr}</span><span class="opt-name">${m.nome}</span></div>`).join("");
+    return `
+      <div class="stage-label">${d.nomeTimeB}: escolha quem entra</div>
+      <div class="grid">${opcoes}</div>
+    `;
+  }
+
+  return `
+    <div class="stage-label">${d.formato === "ultimo-homem" ? "Até o último homem" : "Normal"} — ${d.nomeTimeA} vs ${d.nomeTimeB}</div>
+    ${renderMcCard(d.atualA, "you", false)}
+    <div class="versus">VERSUS</div>
+    ${renderMcCard(d.atualB, "", false)}
+    <button class="btn" onclick="executarBatalhaDuelo()">SIMULAR BATALHA</button>
+  `;
+}
+
+function viewDueloResultado() {
+  const d = state.duelo;
+  const r = d.resultado;
+  const nomeVencedor = r.timeVencedor === "A" ? d.nomeTimeA : r.timeVencedor === "B" ? d.nomeTimeB : "Empate";
+  const logHtml = r.log.map((b) => `<li>${b.a} ${b.placar.replace("x", " x ")} ${b.b} — venceu: <b>${b.vencedor}</b></li>`).join("");
+  return `
+    <div class="card" style="border:2px solid var(--yellow);">
+      <h2>🏆 ${nomeVencedor}</h2>
+      ${r.mvp ? `<p class="lead">⭐ MVP do evento: <b>${r.mvp.nome}</b> (${r.mvp.vitorias} vitória${r.mvp.vitorias > 1 ? "s" : ""}${r.mvp.dominantes ? `, ${r.mvp.dominantes} por 2x0` : ""})</p>` : ""}
+    </div>
+    <div class="card dark">
+      <h2>Batalhas (${d.formato === "ultimo-homem" ? "até o último homem" : "normal"})</h2>
+      <ul class="plain">${logHtml}</ul>
+    </div>
+    <button class="btn" onclick="irParaDuelo()">NOVO DRAFT</button>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar ao menu</button>
+  `;
+}
+
+function viewHistoricoNacional() {
+  const rows = Object.keys(HISTORICAL_NATIONALS).sort().map((ano) => {
+    const r = HISTORICAL_NATIONALS[ano];
+    return `<div class="year-row"><span>${ano}</span><b>🏆 ${r.campeao} · 🥈 ${r.vice}</b></div>`;
+  }).join("");
+  return `
+    <div class="card">
+      <h2>Histórico Nacional</h2>
+      <p class="lead">Resultados reais do Duelo de MCs Nacional. Esses dados nunca são alterados por nenhuma carreira simulada.</p>
+      ${rows}
+      <p class="disclaimer">Campeões e estados vêm das listas de Nacionais e Estaduais fornecidas. Confira o Banco de MCs pra ver todo mundo que passou por essas edições.</p>
+    </div>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar</button>
+  `;
+}
+
+function irParaAdminSenha() {
+  state.view = "admin-senha";
+  render();
+}
+
+function viewAdminSenha() {
+  return `
+    <div class="card">
+      <h2>Editar banco de MCs</h2>
+      <p class="lead">Essa área deixa ajustar os atributos de qualquer MC do banco.</p>
+      <label class="field-label">Senha</label>
+      <input id="f-senha-admin" type="password" placeholder="Senha" />
+      <div id="f-erro-admin" style="color:var(--red);font-size:0.8rem;margin-top:4px;"></div>
+    </div>
+    <button class="btn" onclick="confirmarSenhaAdmin()">ENTRAR</button>
+    <button class="btn secondary" onclick="voltarMenu()">Cancelar</button>
+  `;
+}
+
+function confirmarSenhaAdmin() {
+  const senha = document.getElementById("f-senha-admin").value;
+  if (senha !== "123") {
+    document.getElementById("f-erro-admin").textContent = "Senha incorreta.";
+    return;
+  }
+  state.adminAutenticado = true;
+  state.view = "admin-lista";
+  render();
+}
+
+function viewAdminLista() {
+  if (!state.adminAutenticado) { voltarMenu(); return ""; }
+  const porEstado = {};
+  HISTORICAL_MCS.forEach((m) => { (porEstado[m.estado] = porEstado[m.estado] || []).push(m); });
+  const estados = Object.keys(porEstado).sort();
+  const blocos = estados.map((uf) => {
+    const linhas = porEstado[uf]
+      .slice()
+      .sort((a, b) => b.ovr - a.ovr)
+      .map((m) => `
+        <div class="option-card" onclick="abrirEdicaoMc('${m.id}')">
+          <span class="opt-val">OVR ${m.ovr}</span>
+          <span class="opt-name">${m.nome}</span>
+        </div>
+      `).join("");
+    return `<div class="card dark"><h2>${uf}</h2><div class="grid">${linhas}</div></div>`;
+  }).join("");
+  return `
+    <div class="card"><p class="lead">Toque num MC pra editar os atributos dele.</p></div>
+    ${blocos}
+    <button class="btn secondary" onclick="voltarMenu()">Sair do modo edição</button>
+  `;
+}
+
+function abrirEdicaoMc(id) {
+  if (!state.adminAutenticado) { voltarMenu(); return; }
+  const mc = HISTORICAL_MCS.find((m) => m.id === id);
+  if (!mc) return;
+  state.mcEditando = mc;
+  state.view = "admin-editar";
+  render();
+}
+
+function viewAdminEditar() {
+  if (!state.adminAutenticado || !state.mcEditando) { state.view = "admin-lista"; return viewAdminLista(); }
+  const mc = state.mcEditando;
+  const linhas = ATTRS.map((a) => `
+    <label class="field-label">${a.label}</label>
+    <input id="f-attr-${a.key}" value="${mc[a.key]}" />
+  `).join("");
+  return `
+    <div class="card">
+      <h2>${mc.nome} (${mc.estado})</h2>
+      <p class="lead">OVR atual: ${mc.ovr}</p>
+      ${linhas}
+      <div id="f-erro-edicao" style="color:var(--red);font-size:0.8rem;margin-top:4px;"></div>
+    </div>
+    <button class="btn" onclick="salvarEdicaoMc()">SALVAR</button>
+    <button class="btn secondary" onclick="state.view='admin-lista'; render();">Voltar sem salvar</button>
+  `;
+}
+
+function salvarEdicaoMc() {
+  const mc = state.mcEditando;
+  const novos = {};
+  for (const a of ATTRS) {
+    const v = Number(document.getElementById(`f-attr-${a.key}`).value);
+    if (!Number.isFinite(v) || v < 1 || v > 99) {
+      document.getElementById("f-erro-edicao").textContent = "Cada atributo precisa ser um número de 1 a 99.";
+      return;
+    }
+    novos[a.key] = v;
+  }
+  Object.assign(mc, novos);
+  mc.ovr = Math.round(ATTRS.reduce((acc, a) => acc + mc[a.key], 0) / ATTRS.length);
+  salvarOverrideMc(mc);
+  state.view = "admin-lista";
+  render();
+}
+
+function viewBancoMcs() {
+  const rows = HISTORICAL_MCS.map((m) => `
+    <div class="year-row"><span>${m.nome} (${m.estado})</span><b>OVR ${m.ovr}</b></div>
+  `).join("");
+  return `
+    <div class="card">
+      <h2>Banco de MCs históricos</h2>
+      <p class="lead">${HISTORICAL_MCS.length} MCs reais que participaram de Nacionais (2017-2025) e/ou das Estaduais 2025 de CE, GO, PA, PE, RS e TO. Os atributos e o OVR vêm de uma fórmula determinística pra equilibrar as batalhas — não são uma avaliação oficial da habilidade de ninguém.</p>
+      ${rows}
+    </div>
+    <button class="btn secondary" onclick="voltarMenu()">Voltar</button>
+  `;
+}
+
+// ---------------------------------------------------------
+// Init
+// ---------------------------------------------------------
+
+(async function init() {
+  await carregarTodosSlots();
+  await carregarOverridesMcs();
+  render();
+})();
+
+</script>
+</body>
+</html>
 
